@@ -3,383 +3,1037 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jacob Premiere: The Global Home Cinema Revolution</title>
+    <title data-lang-key="page_title">Jacob Premiere: The Global Home Cinema Revolution</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Visualization & Content Choices:
-        - Overview (Vision, Pitch, Differentiators): Goal: Inform. Method: Prominent text blocks with icons (Unicode). Interaction: Static. Justification: Provides a concise and impactful introduction to Jacob Premiere's core identity and value proposition.
-        - Business Model & Subscription (Revenue Streams, Subscription Details): Goal: Explain. Method: Structured lists and visually separated cards for clarity. Interaction: Static. Justification: Clearly outlines how Jacob Premiere generates revenue and the value offered to subscribers.
-        - "Feel The Hero" Experience (Concept, Benefits, Monetization): Goal: Excite & Differentiate. Method: Descriptive text, benefit lists, and a placeholder for a conceptual visual. Interaction: Static. Justification: Highlights the unique, immersive aspect of the service.
-        - Market Opportunity & Consumer Trends (Market Stats, Consumer Shifts, Demographics): Goal: Demonstrate Potential. Method: Dynamic-looking stat cards (HTML/CSS/Tailwind for visual emphasis) and bulleted lists. Interaction: Static visual. Justification: Quickly conveys the large market size and favorable consumer trends.
-        - Financial Projections & Equity (Use of Funds, JP vs Netflix, JP Financials, Equity Model): Goal: Showcase Viability. Method: Doughnut chart (Chart.js) for Use of Funds; Bar chart (Chart.js) for JP vs Netflix comparison (margins, content cost); Key stat cards for JP Financial Projections; Text summary for Equity Model. Interaction: Tooltips on charts. Justification: Visual comparison and breakdown of key financial data. Library: Chart.js.
-        - Technology & Security (AI Dubbing, "Feel The Hero" Tech, Axinom DRM, Watermark, Detection): Goal: Build Trust & Showcase Innovation. Method: Icon-accompanied (Unicode) text sections and structured lists. Interaction: Static. Justification: Clearly communicates technological advantages and robust security measures essential for partner confidence.
-        - Strategic Alliances (Producers, Smart TV Mfrs): Goal: Illustrate Ecosystem & Growth Strategy. Method: Card-based layout detailing offers and benefits for each partner type. Interaction: Static. Justification: Organizes complex partnership strategies into an easy-to-understand format.
-        - Roadmap & Vision (Timeline, Call to Action): Goal: Show Plan & Inspire Action. Method: Visual timeline representation (HTML/CSS/Tailwind) and a strong concluding call to action. Interaction: Static. Justification: Clearly presents project milestones and invites engagement.
+        - Access Modal: Goal: Secure & Inform. Method: Full-screen overlay with summarized NDA text, name input, and submit button. Interaction: Mandatory input, local storage for persistence. Justification: Enforces confidentiality acknowledgment before content access.
+        - Hero: Goal: Engage. Method: Full-width banner with tagline, dark aesthetic, updated professional background image (electric blue abstract), transparent text container. Interaction: Static.
+        - Thematic Sections: Overview, Experience (Subscription, Feel The Hero), Market (Stats, Trends, Cinema Attendance Bar Chart), Business & Financials (Charts for Funds, Netflix Comparison, Projections, Equity), Tech & Security (Features, Security Layers), Ecosystem (Alliances), Roadmap, Join Us. Goal: Inform, Detail, Showcase. Method: Cards, lists, text blocks, Chart.js charts. Interaction: Smooth scroll navigation, active link highlighting, tooltips on charts.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        .nav-link { transition: all 0.3s ease; }
-        .nav-link.active { color: #22D3EE; /* cyan-400 */ border-bottom: 2px solid #22D3EE; }
-        .section-title { border-left: 4px solid #06B6D4; /* cyan-600 */ }
-        .stat-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.1); }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; background-color: #000000; /* Black */ color: #FFFFFF; /* White */ overflow: hidden; /* Hide scrollbar initially for modal */ }
+        /* Header Styling: Transparent, no shadow */
+        header { background-color: transparent; box-shadow: none; }
+        .nav-link { transition: all 0.3s ease; color: #E2E8F0; /* slate-200 */ }
+        .nav-link.active { color: #22D3EE; /* cyan-400 Electric Blue */ border-bottom: 2px solid #22D3EE; }
+        .nav-link:hover { color: #67E8F9; /* cyan-300 */ }
+        .section-title { border-left: 4px solid #06B6D4; /* cyan-600 */ color: #22D3EE; /* cyan-400 Electric Blue */ }
+        .card { background-color: #111827; /* gray-900 */ border: 1px solid #1F2937; /* gray-800 */ }
+        .stat-card { transition: transform 0.3s ease, box-shadow 0.3s ease; background-color: #1F2937; /* gray-800 */ }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(34, 211, 238,0.2), 0 4px 6px -2px rgba(34, 211, 238,0.1); } /* Cyan shadow on hover */
         .chart-container { position: relative; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto; height: 300px; max-height: 350px; }
-        @media (min-width: 768px) { .chart-container { max-width: 600px; height: 350px; max-height: 400px;} }
-        .roadmap-item::before { content: ''; position: absolute; left: -21px; top: 0px; width: 12px; height: 12px; background-color: #06B6D4; /* cyan-600 */ border-radius: 50%; border: 3px solid #E0F7FA; /* cyan-50 for lighter border */ box-shadow: 0 0 0 3px #06B6D4; }
-        .tab-button.active { background-color: #06B6D4; color: white; }
-        .tab-button { transition: background-color 0.3s ease, color 0.3s ease; }
-        h1, h2, h3, h4, h5, h6 { font-weight: 600; }
+        @media (min-width: 768px) { .chart-container { height: 350px; max-height: 400px;} }
+        .roadmap-item::before { content: ''; position: absolute; left: -21px; top: 0; width: 12px; height: 12px; background-color: #06B6D4; /* cyan-600 */ border-radius: 50%; border: 3px solid #000000; /* Black body background */ box-shadow: 0 0 0 3px #06B6D4; }
+        /* Updated Hero Section Background with new image and transparent text container */
+        .hero-section { 
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), /* Pure black overlay */
+                        url('https://placehold.co/1920x1080/000/22D3EE?text=Electric+Blue+Light+Flow') no-repeat center center; 
+            background-size: cover; 
+            background-position: center; 
+        }
+        .hero-text-container { 
+            background-color: transparent; 
+            padding: 2.5rem; border-radius: 0.75rem; 
+            box-shadow: none; 
+        }
+        .accent-text { color: #67E8F9; /* cyan-300 */ }
+        .primary-accent-text { color: #22D3EE; /* cyan-400 Electric Blue */ }
+        .button-primary { background-color: #06B6D4; /* cyan-600 */ color: white; }
+        .button-primary:hover { background-color: #0E7490; /* cyan-700 */ }
+        .section-intro-text { color: #CBD5E0; /* slate-300 */ }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.95); /* More opaque black */ z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background-color: #111827; /* gray-900 */
+            border: 1px solid #1F2937; /* gray-800 */
+            padding: 2.5rem; border-radius: 0.75rem; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Stronger shadow for modal */
+            max-width: 38rem; 
+            width: 90%; max-height: 90vh; overflow-y: auto;
+            color: #FFFFFF; /* White */
+            text-align: center;
+        }
+        .modal-conditions {
+            text-align: left; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;
+            color: #E2E8F0; /* slate-200 */
+            max-height: 40vh; overflow-y: auto; padding-right: 0.5rem;
+            border-top: 1px solid #1F2937; border-bottom: 1px solid #1F2937; padding-top: 1rem; padding-bottom: 1rem;
+        }
+        .modal-conditions h3 { font-weight: bold; margin-bottom: 0.5rem; color: #22D3EE; /* Electric Blue */ }
+        .modal-input {
+            width: 100%; padding: 0.75rem; border-radius: 0.5rem;
+            background-color: #1F2937; /* gray-800 */ border: 1px solid #334155; /* gray-700 */
+            color: #FFFFFF; /* White */ margin-bottom: 1rem;
+        }
+        .modal-button {
+            width: 100%; padding: 0.75rem; border-radius: 0.5rem;
+            background-color: #06B6D4; /* cyan-600 */ color: white;
+            font-weight: bold; transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .modal-button:hover { background-color: #0E7490; /* cyan-700 */ }
+        .hidden-content { display: none; }
+
+        /* Message box for copy confirmation */
+        .message-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #111827; /* gray-900 */
+            color: #FFFFFF; /* White */
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1001; 
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+
+        /* Language selector styles */
+        .language-selector {
+            display: flex;
+            gap: 8px;
+        }
+        .lang-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .lang-button:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .lang-button.active-lang {
+            background-color: #06B6D4; /* cyan-600 */
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-200">
+<body class="antialiased">
 
-    <header class="bg-slate-800 shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <a href="#" class="text-2xl font-bold text-cyan-400">Jacob Premiere</a>
-                </div>
-                <div class="hidden md:block">
-                    <nav class="ml-10 flex items-baseline space-x-3 lg:space-x-4">
-                        <a href="#overview" class="nav-link px-2 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-cyan-400">Overview</a>
-                        <a href="#business-model" class="nav-link px-2 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-cyan-400">Business</a>
-                        <a href="#feel-the-hero" class="nav-link px-2 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-cyan-400">Feel The Hero</a>
-                        <a href="#market" class="nav-link px-2 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-cyan-400">Market</a>
-                        <a href="#financials" class="nav-link px-2 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-cyan-400">Financials</a>
-                        <a href="#technology" class="nav-link px-2 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-cyan-400">Tech</a>
-                        <a href="#partnerships" class="nav-link px-2 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-cyan-400">Partners</a>
-                        <a href="#roadmap" class="nav-link px-2 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-cyan-400">Roadmap</a>
-                        <a href="#join-us" class="nav-link px-2 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-cyan-400">Join Us</a>
-                    </nav>
-                </div>
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-cyan-400 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500" aria-expanded="false">
-                        <span class="sr-only">Open main menu</span>
-                        <svg class="block h-6 w-6" id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                        <svg class="hidden h-6 w-6" id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="md:hidden hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#overview" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-cyan-400 hover:bg-slate-700">Overview</a>
-                <a href="#business-model" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-cyan-400 hover:bg-slate-700">Business Model</a>
-                <a href="#feel-the-hero" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-cyan-400 hover:bg-slate-700">Feel The Hero</a>
-                <a href="#market" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-cyan-400 hover:bg-slate-700">Market Opportunity</a>
-                <a href="#financials" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-cyan-400 hover:bg-slate-700">Financials</a>
-                <a href="#technology" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-cyan-400 hover:bg-slate-700">Technology & Security</a>
-                <a href="#partnerships" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-cyan-400 hover:bg-slate-700">Partnerships</a>
-                <a href="#roadmap" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-cyan-400 hover:bg-slate-700">Roadmap</a>
-                <a href="#join-us" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-cyan-400 hover:bg-slate-700">Join Us</a>
-            </div>
-        </div>
-    </header>
-
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-        
-        <section id="overview" class="py-12 scroll-mt-16">
-            <h2 class="section-title pl-4 text-3xl font-bold mb-6 text-slate-100">Overview: The Global Home Cinema Revolution</h2>
-            <p class="mb-8 text-lg text-slate-300 leading-relaxed">Welcome to Jacob Premiere, a groundbreaking platform set to redefine the entertainment landscape. This initial section introduces our core vision for transforming home entertainment, our compelling elevator pitch that encapsulates our mission, and the fundamental differentiators that set us apart in the dynamic world of global content consumption. Discover how we plan to empower creators and connect with families worldwide.</p>
+    <div id="access-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="text-3xl font-bold primary-accent-text mb-6" data-lang-key="modal_title">Confidentiality Agreement & Access Conditions</h2>
+            <p class="mb-4 text-slate-300" data-lang-key="modal_intro">By proceeding, you acknowledge and agree to the following conditions regarding the confidential information contained within this platform:</p>
             
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-slate-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <h3 class="text-xl font-semibold text-cyan-400 mb-3 flex items-center"><span class="text-2xl mr-2">🌟</span>Our Vision</h3>
-                    <p class="text-slate-300">To transform every home, hotel, or plane seat into a premium cinema experience.</p>
+            <div class="modal-conditions text-left">
+                <h3 class="text-xl" data-lang-key="modal_def_info_title">1. Definition of Confidential Information</h3>
+                <p class="mb-2" data-lang-key="modal_def_info_text">This includes all technical, commercial, financial, market, strategic, operational, intellectual property, software (including source code), and business plans related to Jacob Premiere. This information is proprietary and highly sensitive.</p>
+                
+                <h3 class="text-xl mt-4" data-lang-key="modal_obligations_title">2. Your Obligations</h3>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li data-lang-key="modal_obligations_1">Maintain strict confidentiality of all disclosed information.</li>
+                    <li data-lang-key="modal_obligations_2">Do not disclose it to any third parties without prior written consent from Jacob Premiere Inc.</li>
+                    <li data-lang-key="modal_obligations_3">Use this information solely for the purpose of evaluating Jacob Premiere for a potential partnership or investment.</li>
+                    <li data-lang-key="modal_obligations_4">Protect the information with at least the same level of care you use for your own confidential data.</li>
+                </ul>
+
+                <h3 class="text-xl mt-4" data-lang-key="modal_ip_title">3. Intellectual Property</h3>
+                <p class="mb-2" data-lang-key="modal_ip_text">All intellectual property rights related to the disclosed information remain solely with Jacob Premiere Inc. No licenses or rights are granted or implied by your access.</p>
+                
+                <p class="text-sm italic mt-4 text-slate-400" data-lang-key="modal_summary_note">This is a summary of key terms. The full Non-Disclosure Agreement (NDA) is a legally binding document that outlines all detailed terms and conditions. Your typed name below serves as acknowledgment of understanding and agreement to abide by these principles of confidentiality for the purposes of platform access. For the full legal NDA, please contact founder@jacobpremiere.com.</p>
+            </div>
+            
+            <label for="full-name" class="block text-left text-sm font-semibold mb-2 mt-6" data-lang-key="modal_name_label">Your Full Name (required for access acknowledgment):</label>
+            <input type="text" id="full-name" class="modal-input" placeholder="" data-lang-key="modal_name_placeholder">
+            <p id="name-error" class="text-red-400 text-sm mb-2 hidden" data-lang-key="modal_name_error">Please enter your full name to proceed.</p>
+            <button id="agree-button" class="modal-button" data-lang-key="modal_access_button">Acknowledge & Access Platform</button>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden-content">
+        <header class="sticky top-0 z-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <div class="flex items-center">
+                        <a href="#hero" class="text-3xl font-extrabold primary-accent-text tracking-tight">Jacob Premiere</a>
+                    </div>
+                    <div class="hidden md:flex items-center space-x-4">
+                        <nav class="ml-10 flex items-baseline space-x-4">
+                            <a href="#overview" class="nav-link px-3 py-2 rounded-md text-sm font-medium" data-lang-key="nav_overview">Overview</a>
+                            <a href="#experience" class="nav-link px-3 py-2 rounded-md text-sm font-medium" data-lang-key="nav_experience">Experience</a>
+                            <a href="#market" class="nav-link px-3 py-2 rounded-md text-sm font-medium" data-lang-key="nav_market">Market</a>
+                            <a href="#business_financials" class="nav-link px-3 py-2 rounded-md text-sm font-medium" data-lang-key="nav_business_financials">Business & Financials</a>
+                            <a href="#tech_security" class="nav-link px-3 py-2 rounded-md text-sm font-medium" data-lang-key="nav_tech_security">Tech & Security</a>
+                            <a href="#ecosystem" class="nav-link px-3 py-2 rounded-md text-sm font-medium" data-lang-key="nav_ecosystem">Ecosystem</a>
+                            <a href="#roadmap" class="nav-link px-3 py-2 rounded-md text-sm font-medium" data-lang-key="nav_roadmap">Roadmap</a>
+                            <a href="#join_us" class="nav-link px-3 py-2 rounded-md text-sm font-medium" data-lang-key="nav_join_us">Join Us</a>
+                        </nav>
+                        <div class="language-selector">
+                            <button class="lang-button" data-lang="en">🇺🇸</button>
+                            <button class="lang-button" data-lang="es">🇪🇸</button>
+                        </div>
+                    </div>
+                    <div class="md:hidden flex items-center space-x-2">
+                        <div class="language-selector">
+                            <button class="lang-button" data-lang="en">🇺🇸</button>
+                            <button class="lang-button" data-lang="es">🇪🇸</button>
+                        </div>
+                        <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-sky-400 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500" aria-expanded="false">
+                            <span class="sr-only" data-lang-key="mobile_menu_open">Open main menu</span>
+                            <svg class="block h-6 w-6" id="icon-menu" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                            <svg class="hidden h-6 w-6" id="icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
                 </div>
-                <div class="bg-slate-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <h3 class="text-xl font-semibold text-cyan-400 mb-3 flex items-center"><span class="text-2xl mr-2">🚀</span>Elevator Pitch</h3>
-                    <p class="text-slate-300">Jacob Premiere replaces theaters with home premieres. With $15 tickets, AI dubbing, and Axinom security, it empowers creators and reaches global families instantly.</p>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#overview" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-700" data-lang-key="nav_overview">Overview</a>
+                    <a href="#experience" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-700" data-lang-key="nav_experience">Experience</a>
+                    <a href="#market" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-700" data-lang-key="nav_market">Market</a>
+                    <a href="#business_financials" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-700" data-lang-key="nav_business_financials">Business & Financials</a>
+                    <a href="#tech_security" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-700" data-lang-key="nav_tech_security">Tech & Security</a>
+                    <a href="#ecosystem" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-700" data-lang-key="nav_ecosystem">Ecosystem</a>
+                    <a href="#roadmap" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-700" data-lang-key="nav_roadmap">Roadmap</a>
+                    <a href="#join_us" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-700" data-lang-key="nav_join_us">Join Us</a>
                 </div>
-                <div class="bg-slate-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <h3 class="text-xl font-semibold text-cyan-400 mb-3 flex items-center"><span class="text-2xl mr-2">💡</span>What Makes Us Different</h3>
-                    <ul class="list-disc list-inside space-y-1 text-slate-300">
-                        <li>$15 Pay-per-view premieres</li>
-                        <li>Real-time AI dubbing</li>
-                        <li>Axinom watermark security</li>
-                        <li>70/30 revenue split with producers</li>
-                    </ul>
-                </div>
+            </div>
+        </header>
+
+        <section id="hero" class="hero-section h-[70vh] md:h-[90vh] flex items-center justify-center text-center scroll-mt-20">
+            <div class="bg-black bg-opacity-70 p-10 rounded-xl shadow-2xl hero-text-container">
+                <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+                    Jacob Premiere
+                </h1>
+                <p class="text-2xl sm:text-3xl text-sky-300 font-semibold" data-lang-key="hero_tagline">The Global Home Cinema Revolution</p>
             </div>
         </section>
 
-        <section id="business-model" class="py-12 scroll-mt-16 bg-slate-800 rounded-lg shadow-xl p-6 md:p-10">
-            <h2 class="section-title pl-4 text-3xl font-bold mb-6 text-slate-100">Business Model & Subscription</h2>
-            <p class="mb-8 text-lg text-slate-300 leading-relaxed">Our innovative business model is engineered for sustainability, robust growth, and delivering maximum value to both our consumers and esteemed partners. It centers around flexible premiere access through Pay-Per-View, a feature-rich premium subscription tier, and strategic licensing opportunities to expand our global footprint.</p>
-
-            <div class="mb-10">
-                <h3 class="text-2xl font-semibold text-cyan-400 mb-4">Core Revenue Streams</h3>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="bg-slate-700 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <h4 class="text-lg font-semibold text-slate-100 mb-2 flex items-center"><span class="text-xl mr-2">🎟️</span>Premiere Tickets (PPV)</h4>
-                        <p class="text-sm text-slate-300">Direct access to new releases for a flat fee of $15.</p>
+        <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <section id="overview" class="py-16 scroll-mt-20">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12" data-lang-key="overview_title">Overview: The Big Picture</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed" data-lang-key="overview_intro">Jacob Premiere is poised to fundamentally change how global audiences experience blockbuster movies. We're moving beyond traditional theaters and passive streaming, offering an innovative, secure, and highly profitable platform that benefits viewers, creators, and partners alike. This section outlines our core vision, concise pitch, and the key differentiators that define our revolutionary approach.</p>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card p-8 rounded-xl shadow-2xl stat-card">
+                        <h3 class="text-2xl font-semibold primary-accent-text mb-4" data-lang-key="overview_vision_title">🌟 Our Vision</h3>
+                        <p data-lang-key="overview_vision_text">To transform every home, hotel, or plane seat into a premium, interactive cinema experience.</p>
                     </div>
-                    <div class="bg-slate-700 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <h4 class="text-lg font-semibold text-slate-100 mb-2 flex items-center"><span class="text-xl mr-2">💎</span>Premium Membership</h4>
-                        <p class="text-sm text-slate-300">A monthly plan offering bundled premieres and exclusive benefits.</p>
+                    <div class="card p-8 rounded-xl shadow-2xl stat-card">
+                        <h3 class="text-2xl font-semibold primary-accent-text mb-4" data-lang-key="overview_pitch_title">🚀 Elevator Pitch</h3>
+                        <p data-lang-key="overview_pitch_text">Jacob Premiere replaces theaters with home premieres. With $15 tickets, AI dubbing, and Axinom security, it empowers creators and reaches global families instantly, offering an immersive "Feel The Hero" experience.</p>
                     </div>
-                    <div class="bg-slate-700 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <h4 class="text-lg font-semibold text-slate-100 mb-2 flex items-center"><span class="text-xl mr-2">📜</span>Licensing</h4>
-                        <p class="text-sm text-slate-300">Extending our reach to Smart TVs, hotels, and schools.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-2xl font-semibold text-cyan-400 mb-6">Detailed Subscription Plan</h3>
-                <div class="bg-gradient-to-br from-cyan-700 to-blue-800 p-6 md:p-8 rounded-xl shadow-2xl text-white">
-                    <h4 class="text-3xl font-bold mb-3">Monthly Subscription – $25 USD</h4>
-                    <p class="text-cyan-100 mb-6 text-lg">Unlock a world of premium cinematic experiences with unparalleled benefits.</p>
-                    <ul class="space-y-3 mb-6">
-                        <li class="flex items-start"><span class="text-xl mr-3">📺</span> Full platform access (Smart TVs, laptops, mobiles, tablets).</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">🍿</span> 2 premieres included per month ($15 value each).</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">🗓️</span> Early home viewing on cinema release day (48h access).</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">📚</span> Free access to catalog 2 weeks post-premiere.</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">🌟</span> Max quality (4K HDR) & immersive audio.</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">🛡️</span> Axinom DRM + forensic watermark protection.</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">🦸</span> Exclusive “Feel The Hero” feature (when available).</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">🚫</span> Ad-free viewing.</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">🎬</span> Exclusive trailers & behind-the-scenes content.</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">🎁</span> Raffles, filmmaker experiences, and more.</li>
-                        <li class="flex items-start"><span class="text-xl mr-3">🤝</span> Invite up to 2 friends per month with temporary passes.</li>
-                    </ul>
-                    <div class="bg-white/20 p-4 rounded-lg mt-4">
-                        <h5 class="text-xl font-semibold mb-1">Additional Fee for Extra Movie – $15 USD</h5>
-                        <p class="text-sm text-cyan-50">For more than 2 premieres/month. Real-time access, cinematic quality, 48h availability. Registered device only.</p>
+                    <div class="card p-8 rounded-xl shadow-2xl stat-card">
+                        <h3 class="text-2xl font-semibold primary-accent-text mb-4" data-lang-key="overview_different_title">💡 What Makes Us Different</h3>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li data-lang-key="overview_different_1">$15 Pay-per-view premieres</li>
+                            <li data-lang-key="overview_different_2">Real-time AI dubbing for global reach</li>
+                            <li data-lang-key="overview_different_3">Military-Grade Axinom security</li>
+                            <li data-lang-key="overview_different_4">Highly favorable 70/30 revenue split with producers</li>
+                            <li data-lang-key="overview_different_5">Exclusive "Feel The Hero" interactive technology</li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="feel-the-hero" class="py-12 scroll-mt-16">
-            <h2 class="section-title pl-4 text-3xl font-bold mb-6 text-slate-100">"Feel The Hero": The Emotional & Connected Cinematic Experience</h2>
-            <p class="mb-8 text-lg text-slate-300 leading-relaxed">"Feel The Hero" is Jacob Premiere's revolutionary feature, designed to transform passive viewing into an active, emotionally resonant experience. It's more than technology; it's a new way to connect with stories and characters, making every premiere unforgettable.</p>
-
-            <div class="bg-slate-800 p-6 md:p-8 rounded-lg shadow-xl">
-                <div class="grid md:grid-cols-2 gap-8 items-center">
+            <section id="experience" class="py-16 scroll-mt-20 card rounded-xl shadow-2xl p-6 md:p-12">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12" data-lang-key="experience_title">The Jacob Premiere Experience</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed" data-lang-key="experience_intro">We're crafting more than just a viewing platform; we're delivering an unparalleled home cinema event. From a flexible and value-packed subscription model to the groundbreaking "Feel The Hero" feature, every aspect is designed to elevate the user experience and deepen engagement.</p>
+                <div class="grid lg:grid-cols-2 gap-12">
                     <div>
-                        <h3 class="text-2xl font-semibold text-cyan-400 mb-4">The Problem We Solve</h3>
-                        <ul class="list-disc list-inside space-y-2 text-slate-300 mb-6">
-                            <li>Traditional cinema often lacks deep, personal emotional connection.</li>
-                            <li>Current streaming platforms offer largely passive viewing experiences.</li>
-                            <li>Viewers crave more: to participate, to feel, to identify with the narrative.</li>
+                        <h3 class="text-3xl font-semibold primary-accent-text mb-8" data-lang-key="experience_subscription_title">💎 Premium Subscription Plan</h3>
+                        <div class="bg-gradient-to-br from-sky-600 to-blue-700 p-8 rounded-xl shadow-xl text-slate-50">
+                            <h4 class="text-4xl font-bold mb-4" data-lang-key="experience_subscription_monthly">Monthly – $25 USD</h4>
+                            <p class="text-sky-100 mb-8 text-lg" data-lang-key="experience_subscription_unlock">Unlock a world of premium cinematic experiences.</p>
+                            <ul class="space-y-4 mb-8">
+                                <li class="flex items-start" data-lang-key="experience_subscription_1"><span class="text-2xl mr-4">📺</span> Full platform access (All devices).</li>
+                                <li class="flex items-start"><span class="text-2xl mr-4">🍿</span> 2 premieres included/month ($15 value each).</li>
+                                <li class="flex items-start"><span class="text-2xl mr-4">🗓️</span> Same-day-as-cinema release (48h access).</li>
+                                <li class="flex items-start"><span class="text-2xl mr-4">📚</span> Catalog access 2 weeks post-premiere.</li>
+                                <li class="flex items-start"><span class="text-2xl mr-4">🌟</span> 4K HDR quality & immersive audio.</li>
+                                <li class="flex items-start"><span class="text-2xl mr-4">🛡️</span> Axinom DRM + forensic watermark.</li>
+                                <li class="flex items-start"><span class="text-2xl mr-4">🦸</span> "Feel The Hero" feature (when available).</li>
+                                <li class="flex items-start"><span class="text-2xl mr-4">🚫</span> Ad-free viewing & exclusive content.</li>
+                                <li class="flex items-start"><span class="text-2xl mr-4">🤝</span> Invite 2 friends/month (temp passes).</li>
+                            </ul>
+                            <div class="bg-slate-50/20 p-4 rounded-lg">
+                                <h5 class="text-2xl font-semibold mb-2" data-lang-key="experience_extra_movie_title">Extra Movie – $15 USD</h5>
+                                <p class="text-sm text-sky-100" data-lang-key="experience_extra_movie_text">For >2 premieres/month. Real-time access, 48h availability, registered device only.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-semibold primary-accent-text mb-8" data-lang-key="feel_the_hero_title">🦸 "Feel The Hero" Interactive Experience</h3>
+                        <div class="bg-slate-700 p-8 rounded-xl shadow-lg h-full flex flex-col justify-between">
+                            <div>
+                                <p class="mb-6 leading-relaxed" data-lang-key="feel_the_hero_intro">Solving the passive viewing problem, "Feel The Hero" connects users to characters via digital/physical objects, delivering real-time sensory feedback (vibration, lights, sound) to make them part of the story.</p>
+                                <p class="italic text-slate-300 mb-6" data-lang-key="feel_the_hero_example">Example: "Watching 'Superman Legacy', my Kryptonian ring vibrates when Clark is in danger. It lights up when he flies. I feel part of the story."</p>
+                                <h4 class="font-semibold text-sky-200 mb-3 text-lg" data-lang-key="feel_the_hero_aspects_title">Key Aspects:</h4>
+                                <ul class="list-disc list-inside text-sm space-y-2 mb-6">
+                                    <li data-lang-key="feel_the_hero_aspects_1">Formats: Digital (NFTs, collectibles) & Physical (rings, figures).</li>
+                                    <li data-lang-key="feel_the_hero_aspects_2">User Benefits: Immersive, emotional connection, collectible value.</li>
+                                    <li data-lang-key="feel_the_hero_aspects_3">Producer Benefits: Monetization, loyalty, differentiation.</li>
+                                    <li data-lang-key="feel_the_hero_aspects_4">Monetization: Object sales ($5-$60), premium interactive content.</li>
+                                    <li data-lang-key="feel_the_hero_aspects_5">Security: Axinom DRM integrated, exclusive to Jacob Premiere.</li>
+                                </ul>
+                            </div>
+                            <div class="w-full h-48 bg-gradient-to-br from-slate-600 to-slate-800 border border-slate-500 rounded-lg flex flex-col items-center justify-center text-sky-300 text-3xl font-bold shadow-md mt-4 p-4">
+                               <span class="text-5xl mb-2">🎬</span>
+                               <span data-lang-key="feel_the_hero_visual_1">Interactive Immersion</span>
+                               <span class="text-lg mt-1" data-lang-key="feel_the_hero_visual_2">Feel The Story</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="market" class="py-16 scroll-mt-20">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12" data-lang-key="market_title">Market & Opportunity: The Untapped Potential</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed" data-lang-key="market_intro">The global demand for convenient, high-quality home entertainment is exploding. Jacob Premiere is perfectly positioned to capture a significant share of this market by addressing evolving consumer preferences and reaching underserved demographics worldwide.</p>
+                <h3 class="text-3xl font-semibold primary-accent-text mb-10" data-lang-key="market_scale_title">Global Scale & Consumer Shift</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                    <div class="stat-card p-8 rounded-xl shadow-lg text-center"><p class="text-6xl font-bold text-sky-300" data-lang-key="market_stat_2B">2B+</p><p class="mt-2" data-lang-key="market_stat_1">Homes with Internet</p></div>
+                    <div class="stat-card p-8 rounded-xl shadow-lg text-center"><p class="text-6xl font-bold text-sky-300" data-lang-key="market_stat_1_3B">1.3B+</p><p class="mt-2" data-lang-key="market_stat_2">Smart TVs Connected</p></div>
+                    <div class="stat-card p-8 rounded-xl shadow-lg text-center"><p class="text-6xl font-bold text-sky-300" data-lang-key="market_stat_260M">260M+</p><p class="mt-2" data-lang-key="market_stat_3">Homes Reachable (20% Pen.)</p></div>
+                    <div class="stat-card bg-red-700 p-8 rounded-xl shadow-lg text-center"><p class="text-4xl font-bold" data-lang-key="market_stat_4_title">AMC Struggles</p><p class="text-xl mt-1" data-lang-key="market_stat_4_text">Losing $350M/quarter</p></div>
+                </div>
+                <div class="card p-8 rounded-xl shadow-xl">
+                    <h4 class="text-2xl font-semibold primary-accent-text mb-6" data-lang-key="market_capitalizing_title">Capitalizing on New Norms:</h4>
+                    <ul class="list-none space-y-6">
+                        <li class="flex items-start"><span class="text-sky-400 text-3xl mr-4">📱</span><div><strong class="text-lg text-slate-100" data-lang-key="market_capitalizing_1_strong">Digital Natives (Gen Z & Millennials):</strong> <span data-lang-key="market_capitalizing_1_text">Prefer instant, at-home access, valuing flexibility, personalization, and control.</span></div></li>
+                        <li class="flex items-start"><span class="text-sky-400 text-3xl mr-4">💻</span><div><strong class="text-lg text-slate-100" data-lang-key="market_capitalizing_2_strong">Adapting Generations (Gen X & Boomers):</strong> <span data-lang-key="market_capitalizing_2_text">Rapidly embracing digital platforms for entertainment.</span></div></li>
+                        <li class="flex items-start"><span class="text-sky-400 text-3xl font-bold mr-4">🌍</span><div><strong class="text-lg text-slate-100" data-lang-key="market_capitalizing_3_strong">Underserved Demographics:</strong> <span data-lang-key="market_capitalizing_3_text">Providing access for seniors, parents with young children, rural communities, and shift workers. Jacob Premiere is cinematic inclusion for everyone.</span></div></li>
+                    </ul>
+                </div>
+                <div class="bg-slate-800 p-6 md:p-8 rounded-lg shadow-xl mt-12">
+                    <h3 class="text-2xl font-semibold primary-accent-text mb-6" data-lang-key="cinema_attendance_title">Traditional Cinema Attendance: A Shifting Landscape</h3>
+                    <p class="mb-6 text-slate-300 leading-relaxed" data-lang-key="cinema_attendance_intro">Recent surveys indicate a significant shift in consumer behavior regarding cinema attendance. The traditional cinema model faces challenges due to factors like limited time and high costs, leading to a strong preference for home entertainment.</p>
+                    <div class="chart-container mx-auto">
+                        <canvas id="cinemaAttendanceChart"></canvas>
+                    </div>
+                    <p class="text-sm text-slate-400 mt-4 text-center" data-lang-key="cinema_attendance_note">Based on current trends, for every 10 people, only 2 are regularly visiting traditional cinemas, while the majority prefer the convenience of home viewing.</p>
+                </div>
+            </section>
+
+            <section id="business_financials" class="py-16 scroll-mt-20 card rounded-xl shadow-2xl p-6 md:p-12">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12" data-lang-key="financials_title">Business Model & Financials</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed" data-lang-key="financials_intro">Our robust business model is engineered for high profitability and scalability. We focus on direct-to-consumer revenue, strategic partnerships, and an innovative equity model that aligns interests for long-term success. This section details our revenue streams, initial fund allocation, compelling financial projections, and a comparison with industry giants.</p>
+                <div class="grid lg:grid-cols-2 gap-12 mb-16">
+                    <div class="bg-slate-700 p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-semibold primary-accent-text mb-6 text-center" data-lang-key="financials_funds_title">Use of Funds (Initial Investment)</h3>
+                        <div class="chart-container mx-auto"><canvas id="useOfFundsChart"></canvas></div>
+                    </div>
+                    <div class="bg-slate-700 p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-semibold primary-accent-text mb-6 text-center" data-lang-key="financials_netflix_title">Jacob Premiere vs. Netflix</h3>
+                        <div class="chart-container mx-auto"><canvas id="vsNetflixChart"></canvas></div>
+                        <p class="text-sm text-slate-400 mt-4 text-center" data-lang-key="financials_netflix_note">Note: Jacob Premiere's content cost is zero as it operates on a revenue-share model with producers. Its operational costs are estimated at $300M-$360M annually and are covered by its revenue share, distinct from content acquisition costs.</p>
+                    </div>
+                </div>
+                <div class="bg-sky-900/30 border border-sky-700 p-8 rounded-xl shadow-lg mb-16">
+                    <h3 class="text-3xl font-semibold text-sky-200 mb-8 text-center" data-lang-key="financials_projections_title">Jacob Premiere Financial Projections</h3>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                        <div><p class="text-slate-300" data-lang-key="financials_projections_1_label">Revenue/Event (10M HH)</p><p class="text-5xl font-bold primary-accent-text mt-1">$150M</p></div>
+                        <div><p class="text-slate-300" data-lang-key="financials_projections_2_label">Annual Revenue (12 Events)</p><p class="text-5xl font-bold primary-accent-text mt-1">$1.8B</p></div>
+                        <div><p class="text-slate-300" data-lang-key="financials_projections_3_label">Est. Annual Costs</p><p class="text-5xl font-bold primary-accent-text mt-1">$300-360M</p></div>
+                        <div><p class="text-slate-300" data-lang-key="financials_projections_4_label">Projected Net Profit</p><p class="text-5xl font-bold text-green-400 mt-1">$1.4B–$1.5B</p><p class="text-green-300" data-lang-key="financials_projections_4_margin">(~77–80% Margin)</p></div>
+                    </div>
+                </div>
+                <div class="bg-slate-700 p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold primary-accent-text mb-6 flex items-center"><span class="text-2xl mr-2">📈</span><span data-lang-key="financials_equity_title">Symbolic Equity Model (Non-Voting)</span></h3>
+                    <p class="mb-4 leading-relaxed" data-lang-key="financials_equity_intro">A C-Corp in Delaware with 10M authorized shares. Up to 500,000 (5%) symbolic non-voting shares are allocated for strategic alliances (studios, Smart TV Mfrs, distributors) to foster long-term partnership and shared growth.</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li data-lang-key="financials_equity_1">Company registered as a C-Corp in Delaware.</li>
+                        <li data-lang-key="financials_equity_2">Authorized issuance of 10,000,000 common shares.</li>
+                        <li data-lang-key="financials_equity_3">Up to 500,000 symbolic shares (5%) allocated for strategic alliances (studios, Smart TV Mfrs, distributors).</li>
+                        <li data-lang-key="financials_equity_4">Benefits for Allies: Direct stake in platform growth, long-term loyalty, potential future equity conversion.</li>
+                        <li data-lang-key="financials_equity_note">Note: Shares do not grant voting rights or control but can appreciate in value with company growth.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="tech_security" class="py-16 scroll-mt-20">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12" data-lang-key="tech_security_title">Technology & Security</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed" data-lang-key="tech_security_intro">Jacob Premiere leverages state-of-the-art technology for a superior user experience and employs military-grade security to protect valuable content, ensuring trust and reliability for both users and content partners.</p>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="card p-8 rounded-xl shadow-xl">
+                        <h3 class="text-3xl font-semibold primary-accent-text mb-8" data-lang-key="tech_core_title">Core Technologies</h3>
+                        <div class="space-y-8">
+                            <div class="flex items-start"><span class="text-4xl mr-5 text-sky-400">🌐</span><div><h4 class="font-semibold text-xl text-slate-100" data-lang-key="tech_ai_dubbing_title">Real-time AI Dubbing</h4><p class="text-slate-300 mt-1" data-lang-key="tech_ai_dubbing_text">Instantly globalizes content by breaking language barriers, expanding audience reach significantly.</p></div></div>
+                            <div class="flex items-start"><span class="text-4xl mr-5 text-sky-400">🦸</span><div><h4 class="font-semibold text-xl text-slate-100" data-lang-key="tech_feel_hero_platform_title">"Feel The Hero" Platform</h4><p class="text-slate-300 mt-1" data-lang-key="tech_feel_hero_platform_text">Proprietary system for delivering interactive and immersive cinematic experiences via connected digital/physical objects.</p></div></div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 border border-blue-500 text-slate-100 p-8 rounded-xl shadow-2xl">
+                        <h3 class="text-3xl font-semibold text-blue-300 mb-8" data-lang-key="tech_security_military_title">🛡️ Military-Grade Security</h3>
+                        <p class="text-slate-300 mb-6" data-lang-key="tech_security_military_intro">Utilizing Axinom's Hollywood-approved suite:</p>
+                        <ul class="list-none space-y-5">
+                            <li class="flex items-start"><span class="text-2xl mr-4 text-green-400">🔒</span><div><strong class="text-lg" data-lang-key="tech_security_drm_title">Axinom DRM:</strong> <span data-lang-key="tech_security_drm_text">Device-encrypted licenses, single playback, blocks screen recording/casting.</span></div></li>
+                            <li class="flex items-start"><span class="text-2xl mr-4 text-green-400">🧬</span><div><strong class="text-lg" data-lang-key="tech_security_watermark_title">Invisible Forensic Watermark:</strong> <span data-lang-key="tech_security_watermark_text">Unique user and device codes in pixels trace leaks from any source.</span></div></li>
+                            <li class="flex items-start"><span class="text-2xl mr-4 text-green-400">🚨</span><div><strong class="text-lg" data-lang-key="tech_security_detection_title">Real-time Detection & Blocking:</strong> <span data-lang-key="tech_security_detection_text">Playback automatically stops on manipulation; global compromised device DB integration.</span></div></li>
                         </ul>
-                        <h3 class="text-2xl font-semibold text-cyan-400 mb-4">Our Solution: "Feel The Hero"</h3>
-                        <p class="text-slate-300 mb-4">An exclusive Jacob Premiere feature allowing users to connect with their favorite characters via digital or physical objects. Receive real-time signals during key scenes (vibration, lights, sound, quotes) and feel like part of the story from the comfort of home.</p>
-                        <div class="bg-slate-700 p-4 rounded-lg shadow">
-                            <p class="font-semibold text-slate-100">Example:</p>
-                            <p class="text-sm text-slate-300">"Watching 'Superman Legacy' on Jacob Premiere. My Kryptonian ring vibrates when Clark is in danger. It lights up when he flies. I feel part of the story."</p>
-                        </div>
-                    </div>
-                    <div class="text-center mt-6 md:mt-0">
-                        <div class="w-full h-64 bg-gradient-to-tr from-cyan-600 to-blue-700 rounded-lg flex flex-col items-center justify-center text-white text-3xl font-bold shadow-lg p-4">
-                           <span class="text-5xl mb-2">🦸</span>
-                           <span>Feel The Hero</span>
-                           <span class="text-lg mt-1">Interactive Experience</span>
-                        </div>
+                        <p class="mt-8 font-semibold text-green-300 text-lg" data-lang-key="tech_security_result">Result: Content is impossible to duplicate or distribute undetected, ensuring studio-level protection.</p>
                     </div>
                 </div>
+            </section>
 
-                <div class="mt-10">
-                    <h4 class="text-xl font-semibold text-slate-100 mb-4">Key Aspects & Benefits</h4>
-                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="p-4 bg-slate-700 rounded-md shadow hover:shadow-lg transition-shadow"> <h5 class="font-semibold text-cyan-400 mb-1">Available Formats</h5> <p class="text-xs text-slate-300">Digital (NFTs, collectibles, on-screen interaction) & Physical (rings, bracelets, Bluetooth figures).</p> </div>
-                        <div class="p-4 bg-slate-700 rounded-md shadow hover:shadow-lg transition-shadow"> <h5 class="font-semibold text-cyan-400 mb-1">Benefits for Users</h5> <p class="text-xs text-slate-300">Immersive experience, deep emotional connection, personalization, collectible value.</p> </div>
-                        <div class="p-4 bg-slate-700 rounded-md shadow hover:shadow-lg transition-shadow"> <h5 class="font-semibold text-cyan-400 mb-1">Benefits for Producers</h5> <p class="text-xs text-slate-300">Increased monetization, audience loyalty, differentiation.</p> </div>
-                        <div class="p-4 bg-slate-700 rounded-md shadow hover:shadow-lg transition-shadow"> <h5 class="font-semibold text-cyan-400 mb-1">Monetization</h5> <p class="text-xs text-slate-300">Sale of exclusive objects ($5–$60), premium interactive content subscription, shared revenue licensing.</p> </div>
-                        <div class="p-4 bg-slate-700 rounded-md shadow hover:shadow-lg transition-shadow"> <h5 class="font-semibold text-cyan-400 mb-1">Security & Exclusivity</h5> <p class="text-xs text-slate-300">Axinom DRM integrated, functions only on Jacob Premiere, prevents piracy.</p> </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="market" class="py-12 scroll-mt-16 bg-slate-800 rounded-lg shadow-xl p-6 md:p-10">
-            <h2 class="section-title pl-4 text-3xl font-bold mb-6 text-slate-100">Market Opportunity & Consumer Trends</h2>
-            <p class="mb-8 text-lg text-slate-300 leading-relaxed">The global entertainment market is undergoing a seismic shift, presenting an unprecedented opportunity for innovative platforms like Jacob Premiere. This section highlights the vast market size, key consumer behavior changes, and the diverse demographics we aim to serve, underscoring our potential for significant global impact.</p>
-
-            <h3 class="text-2xl font-semibold text-cyan-400 mb-6">Key Market Indicators</h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                <div class="stat-card bg-cyan-600 text-white p-6 rounded-lg shadow-lg text-center"> <p class="text-4xl font-bold">2B+</p> <p class="text-sm mt-1">Homes with Internet Globally</p> </div>
-                <div class="stat-card bg-blue-700 text-white p-6 rounded-lg shadow-lg text-center"> <p class="text-4xl font-bold">$60M</p> <p class="text-sm mt-1">Per Movie Potential (1M Homes)</p> </div>
-                <div class="stat-card bg-slate-700 text-white p-6 rounded-lg shadow-lg text-center"> <p class="text-3xl font-bold">AMC Loses</p> <p class="text-2xl font-bold">$350M/qtr</p> <p class="text-xs mt-1">(Traditional Cinema Struggle)</p> </div>
-                <div class="stat-card bg-indigo-600 text-white p-6 rounded-lg shadow-lg text-center"> <p class="text-4xl font-bold">260M+</p> <p class="text-sm mt-1">Homes Reachable (20% Smart TV)</p> </div>
-            </div>
-
-            <h3 class="text-2xl font-semibold text-cyan-400 mb-6">Consumer Behavior Shift & Demographic Reach</h3>
-             <div class="bg-slate-700 p-6 rounded-lg shadow">
-                <ul class="list-none space-y-4 text-slate-300">
-                    <li class="flex items-start"><span class="text-cyan-400 text-2xl mr-3">📱</span><div><strong>Younger Generations (Gen Z & Millennials):</strong> Prefer instant, at-home access over theater outings. They value flexibility, personalization, and control over their viewing experience.</div></li>
-                    <li class="flex items-start"><span class="text-cyan-400 text-2xl mr-3">💻</span><div><strong>Established Generations (Gen X, Boomers):</strong> Rapidly adapting to and embracing digital entertainment platforms.</div></li>
-                    <li class="flex items-start"><span class="text-cyan-400 text-2xl mr-3">🌍</span><div><strong>Underserved Demographics:</strong> Many groups are poorly served by physical cinemas, including:
-                        <ul class="list-disc list-inside ml-6 mt-2 text-sm space-y-1">
-                            <li>Seniors with limited mobility</li>
-                            <li>Parents with young children</li>
-                            <li>Rural communities lacking nearby theaters</li>
-                            <li>Migrant workers and individuals with shift-based employment</li>
+            <section id="ecosystem" class="py-16 scroll-mt-20 card rounded-xl shadow-2xl p-6 md:p-12">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12" data-lang-key="ecosystem_title">Strategic Ecosystem</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed" data-lang-key="ecosystem_intro">Our success is intertwined with strong, mutually beneficial partnerships. Jacob Premiere is building a robust ecosystem by forging strategic alliances with content producers and Smart TV manufacturers, creating a flywheel of growth and innovation.</p>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="bg-slate-700 p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-semibold primary-accent-text mb-6 flex items-center"><span class="text-2xl mr-2">🤝</span><span data-lang-key="ecosystem_producers_title">Alliance with Producers</span></h3>
+                        <p class="mb-4 leading-relaxed" data-lang-key="ecosystem_producers_offer">Offering symbolic non-voting equity, direct metric access, global promotion, and "Feel The Hero" integration.</p>
+                        <p class="font-semibold text-sky-300" data-lang-key="ecosystem_producers_advantages_title">Advantages:</p>
+                        <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">
+                            <li data-lang-key="ecosystem_producers_advantages_1">Higher margins than cinemas.</li>
+                            <li data-lang-key="ecosystem_producers_advantages_2">Continuous revenue post-premiere.</li>
+                            <li data-lang-key="ecosystem_producers_advantages_3">Deep emotional audience connection.</li>
                         </ul>
-                    </div></li>
-                    <li class="flex items-start font-semibold text-slate-100 mt-4 text-lg"><span class="text-cyan-400 text-2xl mr-3">💖</span>Jacob Premiere isn't just entertainment — it's cinematic inclusion for everyone.</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="financials" class="py-12 scroll-mt-16">
-            <h2 class="section-title pl-4 text-3xl font-bold mb-6 text-slate-100">Financial Projections & Equity Model</h2>
-            <p class="mb-8 text-lg text-slate-300 leading-relaxed">Jacob Premiere is underpinned by a robust financial strategy designed for high profitability and sustainable long-term growth. This section details our planned use of initial funds, presents compelling financial projections, offers a comparative analysis against industry leader Netflix, and outlines our innovative symbolic equity participation model for strategic partners.</p>
-
-            <div class="grid lg:grid-cols-2 gap-8 mb-10">
-                <div class="bg-slate-800 p-6 rounded-lg shadow-xl">
-                    <h3 class="text-xl font-semibold text-cyan-400 mb-4 text-center">Use of Funds (Initial Investment)</h3>
-                    <div class="chart-container mx-auto"> <canvas id="useOfFundsChart"></canvas> </div>
-                </div>
-                <div class="bg-slate-800 p-6 rounded-lg shadow-xl">
-                    <h3 class="text-xl font-semibold text-cyan-400 mb-4 text-center">Jacob Premiere vs. Netflix</h3>
-                    <div class="chart-container mx-auto"> <canvas id="vsNetflixChart"></canvas> </div>
-                </div>
-            </div>
-            
-            <div class="bg-slate-800 p-6 md:p-8 rounded-lg shadow-xl mb-10">
-                <h3 class="text-2xl font-semibold text-cyan-400 mb-6">Jacob Premiere Financial Projections</h3>
-                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-                    <div class="bg-slate-700 p-4 rounded-lg shadow hover:shadow-md transition-shadow"> <p class="text-sm text-slate-300">Revenue per Event (10M HH)</p> <p class="text-3xl font-bold text-cyan-400">$150M</p> </div>
-                    <div class="bg-slate-700 p-4 rounded-lg shadow hover:shadow-md transition-shadow"> <p class="text-sm text-slate-300">Annual Revenue (12 Events)</p> <p class="text-3xl font-bold text-cyan-400">$1.8B</p> </div>
-                    <div class="bg-slate-700 p-4 rounded-lg shadow hover:shadow-md transition-shadow"> <p class="text-sm text-slate-300">Est. Annual Costs</p> <p class="text-3xl font-bold text-cyan-400">$300-360M</p> </div>
-                    <div class="bg-slate-700 p-4 rounded-lg shadow hover:shadow-md transition-shadow"> <p class="text-sm text-slate-300">Projected Net Profit</p> <p class="text-3xl font-bold text-emerald-400">$1.4B–$1.5B</p> <p class="text-sm text-slate-300">(~77–80% Margin)</p> </div>
-                </div>
-            </div>
-
-            <div class="bg-slate-800 p-6 md:p-8 rounded-lg shadow-xl">
-                <h3 class="text-2xl font-semibold text-cyan-400 mb-6 flex items-center"><span class="text-2xl mr-2">📈</span>Symbolic Equity Participation Model (Non-Voting)</h3>
-                <p class="text-slate-300 mb-4">An innovative model of non-voting equity incentives for film studios, Smart TV manufacturers, and key distributors/allies, fostering long-term partnership and shared success.</p>
-                <ul class="list-disc list-inside space-y-2 text-slate-300 mb-4">
-                    <li>Company registered as a C-Corp in Delaware.</li>
-                    <li>Authorized issuance of 10,000,000 common shares.</li>
-                    <li>Up to 500,000 symbolic shares (5%) allocated for strategic alliances (studios, Smart TV Mfrs, distributors).</li>
-                    <li>Benefits for Allies: Direct participation in platform growth, long-term loyalty incentive, potential future equity conversion.</li>
-                    <li>Note: Shares do not grant voting rights or control but can appreciate in value with company growth.</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="technology" class="py-12 scroll-mt-16 bg-slate-800 rounded-lg shadow-xl p-6 md:p-10">
-            <h2 class="section-title pl-4 text-3xl font-bold mb-6 text-slate-100">Technology & Security Framework</h2>
-            <p class="mb-8 text-lg text-slate-300 leading-relaxed">Jacob Premiere is engineered with cutting-edge technology to deliver a superior user experience and fortified with military-grade security to protect valuable content. This section details our core technological differentiators, including AI-driven features and our robust, multi-layered security infrastructure powered by Axinom.</p>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="text-xl font-semibold text-cyan-400 mb-4">Key Technological Differentiators</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start p-4 bg-slate-700 rounded-lg shadow hover:shadow-md transition-shadow">
-                            <span class="text-3xl mr-4 text-cyan-400">🌐</span>
-                            <div> <h4 class="font-semibold text-slate-100">Real-time AI Dubbing</h4> <p class="text-sm text-slate-300">Breaking language barriers to reach global audiences instantly and authentically.</p> </div>
-                        </div>
-                        <div class="flex items-start p-4 bg-slate-700 rounded-lg shadow hover:shadow-md transition-shadow">
-                            <span class="text-3xl mr-4 text-cyan-400">🦸</span>
-                            <div> <h4 class="font-semibold text-slate-100">"Feel The Hero" Integration</h4> <p class="text-sm text-slate-300">Proprietary technology for immersive, interactive cinematic experiences.</p> </div>
-                        </div>
+                    </div>
+                    <div class="bg-slate-700 p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-semibold primary-accent-text mb-6 flex items-center"><span class="text-2xl mr-2">📺</span><span data-lang-key="ecosystem_mfrs_title">Alliance with Smart TV Mfrs</span></h3>
+                        <p class="mb-4 leading-relaxed" data-lang-key="ecosystem_mfrs_offer">Offering native app integration, symbolic equity, exclusive demo access, and joint global marketing.</p>
+                        <p class="font-semibold text-sky-300" data-lang-key="ecosystem_mfrs_advantages_title">Advantages:</p>
+                        <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">
+                            <li data-lang-key="ecosystem_mfrs_advantages_1">Tech/emotional differentiation.</li>
+                            <li data-lang-key="ecosystem_mfrs_advantages_2">Shared revenue.</li>
+                            <li data-lang-key="ecosystem_mfrs_advantages_3">Studio collaborations, consumer loyalty.</li>
+                        </ul>
                     </div>
                 </div>
-                <div>
-                    <h3 class="text-xl font-semibold text-cyan-400 mb-4">Military-Grade Security: Axinom DRM + Forensic Anti-Piracy</h3>
-                    <p class="text-sm text-slate-300 mb-3">Utilizing Axinom's security suite, a leader in Hollywood content protection:</p>
-                    <ul class="list-none space-y-3">
-                        <li class="flex items-start"><span class="text-emerald-400 text-2xl mr-2">🔒</span> <div><strong>Axinom DRM:</strong> Encrypted license per device (non-transferable), single playback on registered device, controlled expiration (48h), blocks screen recording, casting, and screenshots.</div></li>
-                        <li class="flex items-start"><span class="text-emerald-400 text-2xl mr-2">🧬</span> <div><strong>Invisible Forensic Watermark:</strong> Unique user and device codes embedded in invisible content pixels, enabling exact source tracing of leaks even from external camera recordings.</div></li>
-                        <li class="flex items-start"><span class="text-emerald-400 text-2xl mr-2">🚨</span> <div><strong>Real-time Detection & Blocking:</strong> Playback automatically stops if environment manipulation, duplication, or file modification is detected; integrates with global compromised device database.</div></li>
-                    </ul>
-                    <p class="mt-4 font-semibold text-emerald-400">Result: Impossible to duplicate or distribute undetected. Unique digital trace per view. Guaranteed studio-level protection.</p>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="partnerships" class="py-12 scroll-mt-16">
-            <h2 class="section-title pl-4 text-3xl font-bold mb-6 text-slate-100">Strategic Alliances & Ecosystem</h2>
-            <p class="mb-8 text-lg text-slate-300 leading-relaxed">Collaboration is the cornerstone of our strategy to revolutionize the entertainment industry. Jacob Premiere is dedicated to forging powerful, mutually beneficial alliances with content producers and Smart TV manufacturers, creating a robust ecosystem that drives innovation and shared success.</p>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-slate-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                    <h3 class="text-xl font-semibold text-cyan-400 mb-4 flex items-center"><span class="text-2xl mr-2">🤝</span>Alliance with Producers</h3>
-                    <p class="text-sm text-slate-300 mb-3">We offer a compelling partnership model:</p>
-                    <ul class="list-disc list-inside space-y-1 text-sm text-slate-300 mb-3">
-                        <li>Symbolic (non-voting) equity participation per licensed movie.</li>
-                        <li>Access to direct viewing, engagement, and monetization metrics.</li>
-                        <li>Global promotion on Smart TVs and compatible devices.</li>
-                        <li>Option for "Feel The Hero" immersive technology integration.</li>
-                    </ul>
-                    <p class="text-sm font-semibold text-slate-100">Advantages for Producers:</p>
-                    <p class="text-xs text-slate-300">Significantly higher margins than traditional cinemas, continuous post-premiere revenue streams via our hybrid model, and deeper emotional audience connection fostering brand loyalty.</p>
+            <section id="roadmap" class="py-16 scroll-mt-20">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12" data-lang-key="roadmap_title">Roadmap & Future Vision</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed" data-lang-key="roadmap_intro">Jacob Premiere is on a clear path to launch and global expansion. Our roadmap outlines key milestones, and our vision extends to continuous innovation, solidifying our position as the leader in the future of home entertainment.</p>
+                <div class="card p-8 rounded-xl shadow-xl">
+                    <h3 class="text-3xl font-semibold primary-accent-text mb-10" data-lang-key="roadmap_plan_title">2025-2027 Execution Plan</h3>
+                    <div class="relative pl-10 border-l-4 border-sky-700 space-y-12">
+                        <div class="roadmap-item"><h4 class="text-2xl font-semibold text-slate-100" data-lang-key="roadmap_q2_2025_title">Q2 2025: Foundation</h4><p class="text-slate-300 mt-1" data-lang-key="roadmap_q2_2025_text">Legal Framework, Domain Acquisition, Core Documentation.</p></div>
+                        <div class="roadmap-item"><h4 class="text-2xl font-semibold text-slate-100" data-lang-key="roadmap_q3_2025_title">Q3 2025: Development & Funding</h4><p class="text-slate-300 mt-1" data-lang-key="roadmap_q3_2025_text">Minimum Viable Product (MVP), WeFunder Campaign, Initial Studio Deals.</p></div>
+                        <div class="roadmap-item"><h4 class="text-2xl font-semibold text-slate-100" data-lang-key="roadmap_q4_2025_title">Q4 2025: Pilot & Integration</h4><p class="text-slate-300 mt-1" data-lang-key="roadmap_q4_2025_text">Pilot Program Launch, Smart TV Bundle Partnerships Initiated.</p></div>
+                        <div class="roadmap-item"><h4 class="text-2xl font-semibold text-slate-100" data-lang-key="roadmap_2026_title">2026 & Beyond: Global Scale</h4><p class="text-slate-300 mt-1" data-lang-key="roadmap_2026_text">Full Global Rollout, Expansion of Licensing Deals, Continuous Feature Innovation (including "Feel The Hero" enhancements).</p></div>
+                    </div>
                 </div>
-                <div class="bg-slate-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                    <h3 class="text-xl font-semibold text-cyan-400 mb-4 flex items-center"><span class="text-2xl mr-2">📺</span>Alliance with Smart TV Manufacturers</h3>
-                    <p class="text-sm text-slate-300 mb-3">Partnering with leaders like LG, Samsung, Sony:</p>
-                    <ul class="list-disc list-inside space-y-1 text-sm text-slate-300 mb-3">
-                        <li>Native integration of the Jacob Premiere application on devices.</li>
-                        <li>Symbolic (non-voting) equity participation as a collaboration incentive.</li>
-                        <li>Exclusive access to demo versions of the service for TV users.</li>
-                        <li>Participation in global joint marketing campaigns.</li>
-                    </ul>
-                    <p class="text-sm font-semibold text-slate-100">Advantages for Manufacturers:</p>
-                    <p class="text-xs text-slate-300">Technological and emotional product differentiation, shared revenue per active user/movie, collaboration with studios on global premieres, enhanced consumer loyalty with exclusive content.</p>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="roadmap" class="py-12 scroll-mt-16 bg-slate-800 rounded-lg shadow-xl p-6 md:p-10">
-            <h2 class="section-title pl-4 text-3xl font-bold mb-6 text-slate-100">Roadmap & Our Vision for the Future</h2>
-            <p class="mb-8 text-lg text-slate-300 leading-relaxed">Jacob Premiere is on a clear trajectory to launch and globally scale its revolutionary home cinema experience. Our strategic roadmap outlines key milestones, while our long-term vision extends beyond current offerings, focusing on continuous innovation to lead and shape the future of entertainment worldwide.</p>
-            
-            <h3 class="text-2xl font-semibold text-cyan-400 mb-8">2025-2027 Strategic Roadmap</h3>
-            <div class="relative pl-8 border-l-4 border-cyan-500">
-                <div class="roadmap-item mb-10 pb-2">
-                    <h4 class="text-lg font-semibold text-slate-100">Q2 2025: Foundation & Framework</h4>
-                    <p class="text-sm text-slate-300">Legal Structuring (C-Corp Delaware) + Domain Acquisition + Core Documentation.</p>
+            <section id="join_us" class="py-24 text-center bg-gradient-to-br from-sky-700 via-blue-800 to-indigo-900 rounded-xl shadow-2xl scroll-mt-20">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-5xl md:text-6xl font-extrabold text-white mb-8" data-lang-key="join_us_title">Let's Premiere the Future!</h2>
+                    <p class="text-xl text-sky-100 mb-12 max-w-3xl mx-auto leading-relaxed" data-lang-key="join_us_text">Join Jacob Premiere in reshaping global entertainment. We offer freedom, flexibility, and premium cinematic access from anywhere. Studios, producers, investors — this is your moment to be an integral part of the at-home cinema revolution.</p>
+                    <a href="#" id="contact-button" class="inline-block bg-cyan-400 text-slate-900 font-bold py-4 px-12 rounded-lg shadow-xl hover:bg-cyan-300 transition duration-300 text-xl transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-sky-300" data-email="founder@jacobpremiere.com" data-lang-key="join_us_contact_button">Contact: Robert Batista, Founder & CEO</a>
+                    <p class="text-lg text-sky-100 mt-4" data-lang-key="join_us_email_visible">Email: <span class="font-semibold">founder@jacobpremiere.com</span></p>
                 </div>
-                <div class="roadmap-item mb-10 pb-2">
-                    <h4 class="text-lg font-semibold text-slate-100">Q3 2025: Development & Funding</h4>
-                    <p class="text-sm text-slate-300">Minimum Viable Product (MVP) Launch + WeFunder Campaign + Initial Studio Deals.</p>
-                </div>
-                <div class="roadmap-item mb-10 pb-2">
-                    <h4 class="text-lg font-semibold text-slate-100">Q4 2025: Pilot & Integration</h4>
-                    <p class="text-sm text-slate-300">Pilot Program Launch + Smart TV Bundle Partnerships Initiated.</p>
-                </div>
-                <div class="roadmap-item">
-                    <h4 class="text-lg font-semibold text-slate-100">2026 & Beyond: Global Expansion</h4>
-                    <p class="text-sm text-slate-300">Phased Global Rollout + Expansion of Licensing Deals + Continuous Innovation in "Feel The Hero" and AI Dubbing technologies.</p>
-                </div>
-            </div>
-        </section>
+            </section>
+        </main>
 
-        <section id="join-us" class="py-16 text-center bg-gradient-to-r from-blue-700 to-indigo-800 rounded-lg shadow-2xl scroll-mt-16">
-            <div class="container mx-auto px-4">
-                <h2 class="text-4xl font-bold text-white mb-6">Let's Premiere the Future, Together!</h2>
-                <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">Join Jacob Premiere in reshaping the entertainment landscape. We offer freedom, flexibility, and premium cinematic access from anywhere in the world. Studios, producers, investors, and tech partners — this is your moment to be an integral part of the at-home cinema revolution.</p>
-                <a href="mailto:founder@jacobpremiere.com" class="inline-block bg-cyan-400 text-slate-900 font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-cyan-300 transition duration-300 text-lg transform hover:scale-105">Contact Us: founder@jacobpremiere.com</a>
+        <footer class="text-center py-12 mt-16 text-sm text-slate-400 border-t border-slate-700">
+            <p data-lang-key="footer_copyright">© <span id="currentYear"></span> Jacob Premiere Inc. All Rights Reserved.</p>
+            <p data-lang-key="footer_slogan">Delaware C-Corp. Innovating the Future of Cinema.</p>
+            <div class="mt-4">
+                <a href="https://x.com/JacobPremiere" target="_blank" rel="noopener noreferrer" class="inline-block text-slate-400 hover:text-sky-400 transition-colors duration-300">
+                    <svg class="h-6 w-6 inline-block mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.814L4.99 21.75H1.68l7.73-8.825L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    <span data-lang-key="footer_follow_x">Follow us on X</span>
+                </a>
             </div>
-        </section>
-    </main>
+        </footer>
+    </div> 
 
-    <footer class="text-center py-10 text-sm text-slate-400 border-t border-slate-700 mt-12">
-        <p>&copy; <span id="currentYear"></span> Jacob Premiere Inc. All Rights Reserved. The Global Home Cinema Revolution.</p>
-    </footer>
+    <div id="message-box" class="message-box" data-lang-key="email_copied_message">
+        Email copied to clipboard!
+    </div>
 
     <script>
+        const translations = {
+            en: {
+                page_title: "Jacob Premiere: The Global Home Cinema Revolution",
+                modal_title: "Confidentiality Agreement & Access Conditions",
+                modal_intro: "By proceeding, you acknowledge and agree to the following conditions regarding the confidential information contained within this platform:",
+                modal_def_info_title: "1. Definition of Confidential Information",
+                modal_def_info_text: "This includes all technical, commercial, financial, market, strategic, operational, intellectual property, software (including source code), and business plans related to Jacob Premiere. This information is proprietary and highly sensitive.",
+                modal_obligations_title: "2. Your Obligations",
+                modal_obligations_1: "Maintain strict confidentiality of all disclosed information.",
+                modal_obligations_2: "Do not disclose it to any third parties without prior written consent from Jacob Premiere Inc.",
+                modal_obligations_3: "Use this information solely for the purpose of evaluating Jacob Premiere for a potential partnership or investment.",
+                modal_obligations_4: "Protect the information with at least the same level of care you use for your own confidential data.",
+                modal_ip_title: "3. Intellectual Property",
+                modal_ip_text: "All intellectual property rights related to the disclosed information remain solely with Jacob Premiere Inc. No licenses or rights are granted or implied by your access.",
+                modal_summary_note: "This is a summary of key terms. The full Non-Disclosure Agreement (NDA) is a legally binding document that outlines all detailed terms and conditions. Your typed name below serves as acknowledgment of understanding and agreement to abide by these principles of confidentiality for the purposes of platform access. For the full legal NDA, please contact founder@jacobpremiere.com.",
+                modal_name_label: "Your Full Name (required for access acknowledgment):",
+                modal_name_placeholder: "Type your full name here",
+                modal_name_error: "Please enter your full name to proceed.",
+                modal_access_button: "Acknowledge & Access Platform",
+
+                nav_overview: "Overview",
+                nav_experience: "Experience",
+                nav_market: "Market",
+                nav_business_financials: "Business & Financials",
+                nav_tech_security: "Tech & Security",
+                nav_ecosystem: "Ecosystem",
+                nav_roadmap: "Roadmap",
+                nav_join_us: "Join Us",
+                mobile_menu_open: "Open main menu",
+                mobile_menu_close: "Close main menu",
+
+                hero_tagline: "The Global Home Cinema Revolution",
+
+                overview_title: "Overview: The Big Picture",
+                overview_intro: "Jacob Premiere is poised to fundamentally change how global audiences experience blockbuster movies. We're moving beyond traditional theaters and passive streaming, offering an innovative, secure, and highly profitable platform that benefits viewers, creators, and partners alike. This section outlines our core vision, concise pitch, and the key differentiators that define our revolutionary approach.",
+                overview_vision_title: "🌟 Our Vision",
+                overview_vision_text: "To transform every home, hotel, or plane seat into a premium, interactive cinema experience.",
+                overview_pitch_title: "🚀 Elevator Pitch",
+                overview_pitch_text: "Jacob Premiere replaces theaters with home premieres. With $15 tickets, AI dubbing, and Axinom security, it empowers creators and reaches global families instantly, offering an immersive \"Feel The Hero\" experience.",
+                overview_different_title: "💡 What Makes Us Different",
+                overview_different_1: "$15 Pay-per-view premieres",
+                overview_different_2: "Real-time AI dubbing for global reach",
+                overview_different_3: "Military-Grade Axinom security",
+                overview_different_4: "Highly favorable 70/30 revenue split with producers",
+                overview_different_5: "Exclusive \"Feel The Hero\" interactive technology",
+
+                experience_title: "The Jacob Premiere Experience",
+                experience_intro: "We're crafting more than just a viewing platform; we're delivering an unparalleled home cinema event. From a flexible and value-packed subscription model to the groundbreaking \"Feel The Hero\" feature, every aspect is designed to elevate the user experience and deepen engagement.",
+                experience_subscription_title: "💎 Premium Subscription Plan",
+                experience_subscription_monthly: "Monthly – $25 USD",
+                experience_subscription_unlock: "Unlock a world of premium cinematic experiences.",
+                experience_subscription_1: "Full platform access (All devices).",
+                experience_subscription_2: "2 premieres included/month ($15 value each).",
+                experience_subscription_3: "Same-day-as-cinema release (48h access).",
+                experience_subscription_4: "Catalog access 2 weeks post-premiere.",
+                experience_subscription_5: "4K HDR quality & immersive audio.",
+                experience_subscription_6: "Axinom DRM + forensic watermark.",
+                experience_subscription_7: "\"Feel The Hero\" feature (when available).",
+                experience_subscription_8: "Ad-free viewing & exclusive content.",
+                experience_subscription_9: "Invite 2 friends/month (temp passes).",
+                experience_extra_movie_title: "Extra Movie – $15 USD",
+                experience_extra_movie_text: "For >2 premieres/month. Real-time access, 48h availability, registered device only.",
+                feel_the_hero_title: "🦸 \"Feel The Hero\" Interactive Experience",
+                feel_the_hero_intro: "Solving the passive viewing problem, \"Feel The Hero\" connects users to characters via digital/physical objects, delivering real-time sensory feedback (vibration, lights, sound) to make them part of the story.",
+                feel_the_hero_example: "Example: \"Watching 'Superman Legacy', my Kryptonian ring vibrates when Clark is in danger. It lights up when he flies. I feel part of the story.\"",
+                feel_the_hero_aspects_title: "Key Aspects:",
+                feel_the_hero_aspects_1: "Formats: Digital (NFTs, collectibles) & Physical (rings, figures).",
+                feel_the_hero_aspects_2: "User Benefits: Immersive, emotional connection, collectible value.",
+                feel_the_hero_aspects_3: "Producer Benefits: Monetization, loyalty, differentiation.",
+                feel_the_hero_aspects_4: "Monetization: Object sales ($5-$60), premium interactive content.",
+                feel_the_hero_aspects_5: "Security: Axinom DRM integrated, exclusive to Jacob Premiere.",
+                feel_the_hero_visual_1: "Interactive Immersion",
+                feel_the_hero_visual_2: "Feel The Story",
+
+                market_title: "Market & Opportunity: The Untapped Potential",
+                market_intro: "The global demand for convenient, high-quality home entertainment is exploding. Jacob Premiere is perfectly positioned to capture a significant share of this market by addressing evolving consumer preferences and reaching underserved demographics worldwide.",
+                market_scale_title: "Global Scale & Consumer Shift",
+                market_stat_1: "Homes with Internet",
+                market_stat_2: "Smart TVs Connected",
+                market_stat_3: "Homes Reachable (20% Pen.)",
+                market_stat_4_title: "AMC Struggles",
+                market_stat_4_text: "Losing $350M/quarter",
+                market_capitalizing_title: "Capitalizing on New Norms:",
+                market_capitalizing_1_strong: "Digital Natives (Gen Z & Millennials):",
+                market_capitalizing_1_text: "Prefer instant, at-home access, valuing flexibility, personalization, and control.",
+                market_capitalizing_2_strong: "Adapting Generations (Gen X & Boomers):",
+                market_capitalizing_2_text: "Rapidly embracing digital platforms for entertainment.",
+                market_capitalizing_3_strong: "Underserved Demographics:",
+                market_capitalizing_3_text: "Providing access for seniors, parents with young children, rural communities, and shift workers. Jacob Premiere is cinematic inclusion for everyone.",
+                cinema_attendance_title: "Traditional Cinema Attendance: A Shifting Landscape",
+                cinema_attendance_intro: "Recent surveys indicate a significant shift in consumer behavior regarding cinema attendance. The traditional cinema model faces challenges due to factors like limited time and high costs, leading to a strong preference for home entertainment.",
+                cinema_attendance_note: "Based on current trends, for every 10 people, only 2 are regularly visiting traditional cinemas, while the majority prefer the convenience of home viewing.",
+                chart_label_go_to_cinema: "Go to Cinema",
+                chart_label_prefer_home: "Prefer Home",
+
+                financials_title: "Business Model & Financials",
+                financials_intro: "Our robust business model is engineered for high profitability and scalability. We focus on direct-to-consumer revenue, strategic partnerships, and an innovative equity model that aligns interests for long-term success. This section details our revenue streams, initial fund allocation, compelling financial projections, and a comparison with industry giants.",
+                financials_funds_title: "Use of Funds (Initial Investment)",
+                financials_netflix_title: "Jacob Premiere vs. Netflix",
+                financials_netflix_note: "Note: Jacob Premiere's content cost is zero as it operates on a revenue-share model with producers. Its operational costs are estimated at $300M-$360M annually and are covered by its revenue share, distinct from content acquisition costs.",
+                financials_projections_title: "Jacob Premiere Financial Projections",
+                financials_projections_1_label: "Revenue/Event (10M HH)",
+                financials_projections_2_label: "Annual Revenue (12 Events)",
+                financials_projections_3_label: "Est. Annual Costs",
+                financials_projections_4_label: "Projected Net Profit",
+                financials_projections_4_margin: "(~77–80% Margin)",
+                financials_equity_title: "Symbolic Equity Model (Non-Voting)",
+                financials_equity_intro: "A C-Corp in Delaware with 10M authorized shares. Up to 500,000 (5%) symbolic non-voting shares are allocated for strategic alliances (studios, Smart TV Mfrs, distributors) to foster long-term partnership and shared growth.",
+                financials_equity_1: "Company registered as a C-Corp in Delaware.",
+                financials_equity_2: "Authorized issuance of 10,000,000 common shares.",
+                financials_equity_3: "Up to 500,000 symbolic shares (5%) allocated for strategic alliances (studios, Smart TV Mfrs, distributors).",
+                financials_equity_4: "Benefits for Allies: Direct stake in platform growth, long-term loyalty, potential future equity conversion.",
+                financials_equity_note: "Note: Shares do not grant voting rights or control but can appreciate in value with company growth.",
+                chart_label_app_dev: "App Dev",
+                chart_label_legal: "Legal",
+                chart_label_studio_lic: "Studio Lic.",
+                chart_label_smart_tv_ptnrs: "Smart TV Ptnrs",
+                chart_label_marketing: "Marketing",
+                chart_label_netflix_margins: "Netflix Margins",
+                chart_label_jp_margins: "JP Margins",
+                chart_label_netflix_content_cost: "Netflix Content Cost",
+                chart_label_jp_content_cost: "JP Content Cost",
+
+                tech_security_title: "Technology & Security",
+                tech_security_intro: "Jacob Premiere leverages state-of-the-art technology for a superior user experience and employs military-grade security to protect valuable content, ensuring trust and reliability for both users and content partners.",
+                tech_core_title: "Core Technologies",
+                tech_ai_dubbing_title: "Real-time AI Dubbing",
+                tech_ai_dubbing_text: "Instantly globalizes content by breaking language barriers, expanding audience reach significantly.",
+                tech_feel_hero_platform_title: "\"Feel The Hero\" Platform",
+                tech_feel_hero_platform_text: "Proprietary system for delivering interactive and immersive cinematic experiences via connected digital/physical objects.",
+                tech_security_military_title: "🛡️ Military-Grade Security",
+                tech_security_military_intro: "Utilizing Axinom's Hollywood-approved suite:",
+                tech_security_drm_title: "Axinom DRM:",
+                tech_security_drm_text: "Device-encrypted licenses, single playback, blocks screen recording/casting.",
+                tech_security_watermark_title: "Invisible Forensic Watermark:",
+                tech_security_watermark_text: "Unique user and device codes in pixels trace leaks from any source.",
+                tech_security_detection_title: "Real-time Detection & Blocking:",
+                tech_security_detection_text: "Playback automatically stops on manipulation; global compromised device DB integration.",
+                tech_security_result: "Result: Content is impossible to duplicate or distribute undetected, ensuring studio-level protection.",
+
+                ecosystem_title: "Strategic Ecosystem",
+                ecosystem_intro: "Our success is intertwined with strong, mutually beneficial partnerships. Jacob Premiere is building a robust ecosystem by forging strategic alliances with content producers and Smart TV manufacturers, creating a flywheel of growth and innovation.",
+                ecosystem_producers_title: "Alliance with Producers",
+                ecosystem_producers_offer: "Offering symbolic non-voting equity, direct metric access, global promotion, and \"Feel The Hero\" integration.",
+                ecosystem_producers_advantages_title: "Advantages:",
+                ecosystem_producers_advantages_1: "Higher margins than cinemas.",
+                ecosystem_producers_advantages_2: "Continuous revenue post-premiere.",
+                ecosystem_producers_advantages_3: "Deep emotional audience connection.",
+                ecosystem_mfrs_title: "Alliance with Smart TV Mfrs",
+                ecosystem_mfrs_offer: "Offering native app integration, symbolic equity, exclusive demo access, and joint global marketing.",
+                ecosystem_mfrs_advantages_title: "Advantages:",
+                ecosystem_mfrs_advantages_1: "Tech/emotional differentiation.",
+                ecosystem_mfrs_advantages_2: "Shared revenue.",
+                ecosystem_mfrs_advantages_3: "Studio collaborations, consumer loyalty.",
+
+                roadmap_title: "Roadmap & Future Vision",
+                roadmap_intro: "Jacob Premiere is on a clear path to launch and global expansion. Our roadmap outlines key milestones, and our vision extends to continuous innovation, solidifying our position as the leader in the future of home entertainment.",
+                roadmap_plan_title: "2025-2027 Strategic Roadmap",
+                roadmap_q2_2025_title: "Q2 2025: Foundation & Framework",
+                roadmap_q2_2025_text: "Legal Structuring (C-Corp Delaware) + Domain Acquisition + Core Documentation.",
+                roadmap_q3_2025_title: "Q3 2025: Development & Funding",
+                roadmap_q3_2025_text: "Minimum Viable Product (MVP) Launch + WeFunder Campaign + Initial Studio Deals.",
+                roadmap_q4_2025_title: "Q4 2025: Pilot & Integration",
+                roadmap_q4_2025_text: "Pilot Program Launch + Smart TV Bundle Partnerships Initiated.",
+                roadmap_2026_title: "2026 & Beyond: Global Scale",
+                roadmap_2026_text: "Full Global Rollout + Expansion of Licensing Deals + Continuous Innovation in \"Feel The Hero\" and AI Dubbing technologies.",
+
+                join_us_title: "Let's Premiere the Future!",
+                join_us_text: "Join Jacob Premiere in reshaping global entertainment. We offer freedom, flexibility, and premium cinematic access from anywhere. Studios, producers, investors — this is your moment to be an integral part of the at-home cinema revolution.",
+                join_us_contact_button: "Contact: Robert Batista, Founder & CEO",
+                join_us_email_visible: "Email: founder@jacobpremiere.com",
+
+                footer_copyright: "© <span id=\"currentYear\"></span> Jacob Premiere Inc. All Rights Reserved.",
+                footer_slogan: "Delaware C-Corp. Innovating the Future of Cinema.",
+                footer_follow_x: "Follow us on X",
+                email_copied_message: "Email copied to clipboard!",
+            },
+            es: {
+                page_title: "Jacob Premiere: La Revolución Global del Cine en Casa",
+                modal_title: "Acuerdo de Confidencialidad y Condiciones de Acceso",
+                modal_intro: "Al continuar, usted reconoce y acepta las siguientes condiciones con respecto a la información confidencial contenida en esta plataforma:",
+                modal_def_info_title: "1. Definición de Información Confidencial",
+                modal_def_info_text: "Esto incluye toda la información técnica, comercial, financiera, de mercado, estratégica, operativa, de propiedad intelectual, de software (incluido el código fuente), y planes de negocio relacionados con Jacob Premiere. Esta información es propietaria y altamente sensible.",
+                modal_obligations_title: "2. Sus Obligaciones",
+                modal_obligations_1: "Mantener estricta confidencialidad de toda la información divulgada.",
+                modal_obligations_2: "No divulgarla a terceros sin el consentimiento previo por escrito de Jacob Premiere Inc.",
+                modal_obligations_3: "Utilizar esta información únicamente con el propósito de evaluar Jacob Premiere para una posible asociación o inversión.",
+                modal_obligations_4: "Proteger la información con al menos el mismo nivel de cuidado que utiliza para sus propios datos confidenciales.",
+                modal_ip_title: "3. Propiedad Intelectual",
+                modal_ip_text: "Todos los derechos de propiedad intelectual relacionados con la información divulgada pertenecen exclusivamente a Jacob Premiere Inc. No se otorgan ni implican licencias o derechos por su acceso.",
+                modal_summary_note: "Este es un resumen de los términos clave. El Acuerdo de Confidencialidad (NDA) completo es un documento legalmente vinculante que describe todos los términos y condiciones detallados. Su nombre escrito a continuación sirve como reconocimiento de comprensión y acuerdo para cumplir con estos principios de confidencialidad a efectos del acceso a la plataforma. Para el NDA legal completo, por favor contacte a founder@jacobpremiere.com.",
+                modal_name_label: "Su Nombre Completo (requerido para el reconocimiento de acceso):",
+                modal_name_placeholder: "Escriba su nombre completo aquí",
+                modal_name_error: "Por favor, introduzca su nombre completo para continuar.",
+                modal_access_button: "Reconocer y Acceder a la Plataforma",
+
+                nav_overview: "Resumen",
+                nav_experience: "Experiencia",
+                nav_market: "Mercado",
+                nav_business_financials: "Negocio y Finanzas",
+                nav_tech_security: "Tecnología y Seguridad",
+                nav_ecosystem: "Ecosistema",
+                nav_roadmap: "Hoja de Ruta",
+                nav_join_us: "Únete",
+                mobile_menu_open: "Abrir menú principal",
+                mobile_menu_close: "Cerrar menú principal",
+
+                hero_tagline: "La Revolución Global del Cine en Casa",
+
+                overview_title: "Resumen: El Panorama General",
+                overview_intro: "Jacob Premiere está a punto de cambiar fundamentalmente la forma en que las audiencias globales experimentan las películas taquilleras. Estamos yendo más allá de los cines tradicionales y el streaming pasivo, ofreciendo una plataforma innovadora, segura y altamente rentable que beneficia a espectadores, creadores y socios por igual. Esta sección describe nuestra visión central, nuestra propuesta concisa y los diferenciadores clave que definen nuestro enfoque revolucionario.",
+                overview_vision_title: "🌟 Nuestra Visión",
+                overview_vision_text: "Transformar cada hogar, hotel o asiento de avión en una experiencia de cine premium e interactiva.",
+                overview_pitch_title: "🚀 Propuesta de Valor",
+                overview_pitch_text: "Jacob Premiere reemplaza los cines con estrenos en casa. Con entradas de $15, doblaje con IA y seguridad Axinom, empodera a los creadores y llega a familias globales al instante, ofreciendo una experiencia inmersiva \"Feel The Hero\".",
+                overview_different_title: "💡 Qué Nos Hace Diferentes",
+                overview_different_1: "Estrenos Pay-per-view de $15",
+                overview_different_2: "Doblaje con IA en tiempo real para alcance global",
+                overview_different_3: "Seguridad Axinom de Grado Militar",
+                overview_different_4: "Reparto de ingresos altamente favorable 70/30 con productores",
+                overview_different_5: "Tecnología interactiva exclusiva \"Feel The Hero\"",
+
+                experience_title: "La Experiencia Jacob Premiere",
+                experience_intro: "Estamos creando más que una simple plataforma de visualización; estamos ofreciendo un evento cinematográfico en casa sin precedentes. Desde un modelo de suscripción flexible y lleno de valor hasta la innovadora función \"Feel The Hero\", cada aspecto está diseñado para elevar la experiencia del usuario y profundizar el compromiso.",
+                experience_subscription_title: "💎 Plan de Suscripción Premium",
+                experience_subscription_monthly: "Mensual – $25 USD",
+                experience_subscription_unlock: "Desbloquea un mundo de experiencias cinematográficas premium.",
+                experience_subscription_1: "Acceso completo a la plataforma (Todos los dispositivos).",
+                experience_subscription_2: "2 estrenos incluidos/mes (valor de $15 cada uno).",
+                experience_subscription_3: "Estreno en casa el mismo día que en cines (acceso 48h).",
+                experience_subscription_4: "Acceso al catálogo 2 semanas post-estreno.",
+                experience_subscription_5: "Calidad 4K HDR y audio inmersivo.",
+                experience_subscription_6: "Axinom DRM + marca de agua forense.",
+                experience_subscription_7: "Función \"Feel The Hero\" (cuando esté disponible).",
+                experience_subscription_8: "Visualización sin anuncios y contenido exclusivo.",
+                experience_subscription_9: "Invita a 2 amigos/mes (pases temporales).",
+                experience_extra_movie_title: "Película Extra – $15 USD",
+                experience_extra_movie_text: "Para >2 estrenos/mes. Acceso en tiempo real, 48h de disponibilidad, solo dispositivo registrado.",
+                feel_the_hero_title: "🦸 Experiencia Interactiva \"Feel The Hero\"",
+                feel_the_hero_intro: "Resolviendo el problema de la visualización pasiva, \"Feel The Hero\" conecta a los usuarios con los personajes a través de objetos digitales/físicos, entregando señales en tiempo real (vibración, luces, sonido) para hacerlos parte de la historia.",
+                feel_the_hero_example: "Ejemplo: \"Viendo 'Superman Legacy', mi anillo Kryptoniano vibra cuando Clark está en peligro. Se ilumina cuando vuela. Siento que soy parte de la historia.\"",
+                feel_the_hero_aspects_title: "Aspectos Clave:",
+                feel_the_hero_aspects_1: "Formatos: Digital (NFTs, coleccionables) y Físico (anillos, figuras).",
+                feel_the_hero_aspects_2: "Beneficios Usuario: Inmersión, conexión emocional, valor coleccionable.",
+                feel_the_hero_aspects_3: "Beneficios Productores: Monetización, lealtad, diferenciación.",
+                feel_the_hero_aspects_4: "Monetización: Venta de objetos ($5-$60), suscripción premium interactiva.",
+                feel_the_hero_aspects_5: "Seguridad: Axinom DRM integrado, exclusivo de Jacob Premiere.",
+                feel_the_hero_visual_1: "Inmersión Interactiva",
+                feel_the_hero_visual_2: "Siente la Historia",
+
+                market_title: "Mercado y Oportunidad: El Potencial Sin Explotar",
+                market_intro: "La demanda global de entretenimiento en casa conveniente y de alta calidad está explotando. Jacob Premiere está perfectamente posicionado para capturar una cuota significativa de este mercado al abordar las preferencias cambiantes de los consumidores y llegar a demografías desatendidas en todo el mundo.",
+                market_scale_title: "Escala Global y Cambio del Consumidor",
+                market_stat_1: "Hogares con Internet",
+                market_stat_2: "Smart TVs Conectadas",
+                market_stat_3: "Hogares Alcanzables (20% Pen.)",
+                market_stat_4_title: "AMC en Apuros",
+                market_stat_4_text: "Perdiendo $350M/trimestre",
+                market_capitalizing_title: "Aprovechando las Nuevas Normas:",
+                market_capitalizing_1_strong: "Nativos Digitales (Gen Z y Millennials):",
+                market_capitalizing_1_text: "Prefieren acceso instantáneo en casa, valorando la flexibilidad, personalización y control.",
+                market_capitalizing_2_strong: "Generaciones en Adaptación (Gen X, Boomers):",
+                market_capitalizing_2_text: "Adoptando rápidamente las plataformas digitales para el entretenimiento.",
+                market_capitalizing_3_strong: "Demografías Desatendidas:",
+                market_capitalizing_3_text: "Proporcionando acceso a personas mayores, padres con niños pequeños, comunidades rurales y trabajadores por turnos. Jacob Premiere es inclusión cinematográfica para todos.",
+                cinema_attendance_title: "Asistencia al Cine Tradicional: Un Paisaje Cambiante",
+                cinema_attendance_intro: "Encuestas recientes indican un cambio significativo en el comportamiento del consumidor con respecto a la asistencia al cine. El modelo de cine tradicional enfrenta desafíos debido a factores como el tiempo limitado y los altos costos, lo que lleva a una fuerte preferencia por el entretenimiento en casa.",
+                cinema_attendance_note: "Según las tendencias actuales, de cada 10 personas, solo 2 visitan regularmente los cines tradicionales, mientras que la mayoría prefiere la comodidad de ver en casa.",
+                chart_label_go_to_cinema: "Van al Cine",
+                chart_label_prefer_home: "Prefieren Casa",
+
+                financials_title: "Modelo de Negocio y Finanzas",
+                financials_intro: "Nuestro robusto modelo de negocio está diseñado para una alta rentabilidad y escalabilidad. Nos centramos en los ingresos directos al consumidor, las asociaciones estratégicas y un modelo de capital innovador que alinea los intereses para el éxito a largo plazo. Esta sección detalla nuestras fuentes de ingresos, asignación de fondos iniciales, proyecciones financieras convincentes y una comparación con los gigantes de la industria.",
+                financials_funds_title: "Uso de Fondos (Inversión Inicial)",
+                financials_netflix_title: "Jacob Premiere vs. Netflix",
+                financials_netflix_note: "Nota: El costo de contenido de Jacob Premiere es cero ya que opera bajo un modelo de reparto de ingresos con los productores. Sus costos operativos se estiman en $300M-$360M anuales y están cubiertos por su participación en los ingresos, a diferencia de los costos de adquisición de contenido.",
+                financials_projections_title: "Proyecciones Financieras de Jacob Premiere",
+                financials_projections_1_label: "Ingresos/Evento (10M Hogares)",
+                financials_projections_2_label: "Ingresos Anuales (12 Eventos)",
+                financials_projections_3_label: "Costos Anuales Estimados",
+                financials_projections_4_label: "Beneficio Neto Proyectado",
+                financials_projections_4_margin: "(~77–80% Margen)",
+                financials_equity_title: "Modelo de Participación Accionaria Simbólica (Sin Voto)",
+                financials_equity_intro: "Una C-Corp en Delaware con 10M de acciones comunes autorizadas. Hasta 500,000 (5%) acciones simbólicas sin voto se asignan a alianzas estratégicas (estudios, fabricantes de Smart TV, distribuidores) para fomentar la asociación y el crecimiento a largo plazo.",
+                financials_equity_1: "Empresa registrada como C-Corp en Delaware.",
+                financials_equity_2: "Emisión autorizada de 10.000.000 de acciones comunes.",
+                financials_equity_3: "Hasta 500.000 acciones simbólicas (5%) asignadas a alianzas estratégicas (estudios, fabricantes de Smart TV, distribuidores).",
+                financials_equity_4: "Beneficios para Aliados: Participación directa en el crecimiento de la plataforma, incentivo de lealtad a largo plazo, posible conversión futura a capital.",
+                financials_equity_note: "Nota: Las acciones no otorgan derechos de voto ni control, pero su valor puede apreciarse con el crecimiento de la empresa.",
+                chart_label_app_dev: "Desarrollo de App",
+                chart_label_legal: "Legal",
+                chart_label_studio_lic: "Licencias de Estudio",
+                chart_label_smart_tv_ptnrs: "Socios Smart TV",
+                chart_label_marketing: "Marketing",
+                chart_label_netflix_margins: "Márgenes Netflix",
+                chart_label_jp_margins: "Márgenes JP",
+                chart_label_netflix_content_cost: "Costo Contenido Netflix",
+                chart_label_jp_content_cost: "Costo Contenido JP",
+
+                tech_security_title: "Tecnología y Seguridad",
+                tech_security_intro: "Jacob Premiere aprovecha tecnología de vanguardia para una experiencia de usuario superior y emplea seguridad de grado militar para proteger contenido valioso, garantizando confianza y fiabilidad tanto para usuarios como para socios de contenido.",
+                tech_core_title: "Tecnologías Clave",
+                tech_ai_dubbing_title: "Doblaje con IA en Tiempo Real",
+                tech_ai_dubbing_text: "Globaliza instantáneamente el contenido rompiendo las barreras del idioma, expandiendo significativamente el alcance de la audiencia.",
+                tech_feel_hero_platform_title: "Plataforma \"Feel The Hero\"",
+                tech_feel_hero_platform_text: "Sistema propietario para ofrecer experiencias cinematográficas interactivas e inmersivas a través de objetos digitales/físicos conectados.",
+                tech_security_military_title: "🛡️ Seguridad de Grado Militar",
+                tech_security_military_intro: "Utilizando la suite de seguridad de Axinom, aprobada por Hollywood:",
+                tech_security_drm_title: "Axinom DRM:",
+                tech_security_drm_text: "Licencias cifradas por dispositivo (no transferibles), reproducción única en dispositivo registrado, bloquea grabación de pantalla/casting.",
+                tech_security_watermark_title: "Marca de Agua Forense Invisible:",
+                tech_security_watermark_text: "Códigos únicos de usuario y dispositivo incrustados en píxeles invisibles, permitiendo rastrear filtraciones desde cualquier fuente.",
+                tech_security_detection_title: "Detección y Bloqueo en Tiempo Real:",
+                tech_security_detection_text: "La reproducción se detiene automáticamente si se detecta manipulación; integración con base de datos global de dispositivos comprometidos.",
+                tech_security_result: "Resultado: El contenido es imposible de duplicar o distribuir sin ser detectado, garantizando protección a nivel de estudio.",
+
+                ecosystem_title: "Ecosistema Estratégico",
+                ecosystem_intro: "Nuestro éxito está entrelazado con asociaciones sólidas y mutuamente beneficiosas. Jacob Premiere está construyendo un ecosistema robusto forjando alianzas estratégicas con productores de contenido y fabricantes de Smart TV, creando un ciclo de crecimiento e innovación.",
+                ecosystem_producers_title: "Alianza con Productores",
+                ecosystem_producers_offer: "Ofreciendo participación accionaria simbólica sin voto, acceso a métricas directas, promoción global e integración \"Feel The Hero\".",
+                ecosystem_producers_advantages_title: "Ventajas:",
+                ecosystem_producers_advantages_1: "Mayores márgenes que los cines.",
+                ecosystem_producers_advantages_2: "Ingresos continuos post-estreno.",
+                ecosystem_producers_advantages_3: "Conexión emocional profunda con la audiencia.",
+                ecosystem_mfrs_title: "Alianza con Fabricantes de Smart TV",
+                ecosystem_mfrs_offer: "Ofreciendo integración nativa de la app, capital simbólico, acceso exclusivo a demos y marketing conjunto global.",
+                ecosystem_mfrs_advantages_title: "Ventajas:",
+                ecosystem_mfrs_advantages_1: "Diferenciación tecnológica/emocional.",
+                ecosystem_mfrs_advantages_2: "Ingresos compartidos.",
+                ecosystem_mfrs_advantages_3: "Colaboraciones con estudios, lealtad del consumidor.",
+
+                roadmap_title: "Hoja de Ruta y Visión Futura",
+                roadmap_intro: "Jacob Premiere está en un camino claro hacia el lanzamiento y la expansión global. Nuestra hoja de ruta describe hitos clave, y nuestra visión se extiende a la innovación continua, consolidando nuestra posición como líderes en el futuro del entretenimiento en el hogar.",
+                roadmap_plan_title: "Plan de Ejecución 2025-2027",
+                roadmap_q2_2025_title: "Q2 2025: Fundación y Marco",
+                roadmap_q2_2025_text: "Estructuración Legal (C-Corp Delaware) + Adquisición de Dominio + Documentación Central.",
+                roadmap_q3_2025_title: "Q3 2025: Desarrollo y Financiación",
+                roadmap_q3_2025_text: "Lanzamiento de Producto Mínimo Viable (MVP) + Campaña WeFunder + Acuerdos Iniciales con Estudios.",
+                roadmap_q4_2025_title: "Q4 2025: Piloto e Integración",
+                roadmap_q4_2025_text: "Lanzamiento del Programa Piloto + Inicio de Asociaciones con Smart TV.",
+                roadmap_2026_title: "2026 y Más Allá: Escala Global",
+                roadmap_2026_text: "Despliegue Global por Fases + Expansión de Acuerdos de Licencia + Innovación Continua en tecnologías \"Feel The Hero\" y Doblaje con IA.",
+
+                join_us_title: "¡Estrenemos el Futuro!",
+                join_us_text: "Únete a Jacob Premiere para remodelar el entretenimiento global. Ofrecemos libertad, flexibilidad y acceso cinematográfico premium desde cualquier lugar. Estudios, productores, inversores: este es tu momento para ser una parte integral de la revolución del cine en casa.",
+                join_us_contact_button: "Contacto: Robert Batista, Fundador y CEO",
+                join_us_email_visible: "Email: founder@jacobpremiere.com",
+
+                footer_copyright: "© <span id=\"currentYear\"></span> Jacob Premiere Inc. Todos los Derechos Reservados.",
+                footer_slogan: "Delaware C-Corp. Innovando el Futuro del Cine.",
+                footer_follow_x: "Síguenos en X",
+                email_copied_message: "¡Correo copiado al portapapeles!",
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('jacobPremiereLang') || 'en';
+        let chartInstances = {}; // To store chart instances for updates
+
+        function setLanguage(lang) {
+            console.log(`Attempting to set language to: ${lang}`); // Debug log
+            currentLanguage = lang;
+            localStorage.setItem('jacobPremiereLang', lang);
+
+            // Update text content
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang] && translations[lang][key] !== undefined) { // Check for undefined
+                    element.innerHTML = translations[lang][key];
+                } else {
+                    console.warn(`Missing translation for key: ${key} in language: ${lang}`); // Warn for missing keys
+                }
+            });
+
+            // Update placeholders
+            const fullNamePlaceholder = document.querySelector('#full-name[data-lang-key="modal_name_placeholder"]');
+            if (fullNamePlaceholder) {
+                fullNamePlaceholder.placeholder = translations[lang].modal_name_placeholder;
+            }
+
+            // Update active language button
+            document.querySelectorAll('.lang-button').forEach(button => {
+                if (button.getAttribute('data-lang') === lang) {
+                    button.classList.add('active-lang');
+                } else {
+                    button.classList.remove('active-lang');
+                }
+            });
+
+            // Update charts
+            updateCharts();
+            console.log(`Language set to ${lang} and charts updated.`); // Debug log
+        }
+
+        function updateCharts() {
+            console.log("Updating charts for current language."); // Debug log
+            // Destroy existing charts if they exist
+            for (const chartId in chartInstances) {
+                if (chartInstances[chartId]) {
+                    chartInstances[chartId].destroy();
+                    delete chartInstances[chartId]; // Remove from object after destroying
+                }
+            }
+            chartInstances = {}; // Reset chart instances
+
+            // Cinema Attendance Chart
+            const cinemaAttendanceCanvas = document.getElementById('cinemaAttendanceChart');
+            if (cinemaAttendanceCanvas) {
+                try {
+                    chartInstances.cinemaAttendanceChart = new Chart(cinemaAttendanceCanvas.getContext('2d'), {
+                        type: 'bar',
+                        data: {
+                            labels: [translations[currentLanguage].chart_label_go_to_cinema, translations[currentLanguage].chart_label_prefer_home],
+                            datasets: [{
+                                data: [2, 8],
+                                backgroundColor: ['#22D3EE', '#67E8F9'], // Electric Blue shades
+                                borderColor: '#111827', // Gray-900
+                                borderWidth: 1,
+                                borderRadius: 5
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            scales: {
+                                x: { beginAtZero: true, max: 10, ticks: { stepSize: 1, color: '#E2E8F0' }, grid: { color: '#1F2937' } }, // White text, gray-800 grid
+                                y: { ticks: { color: '#E2E8F0' }, grid: { color: '#1F2937' } }
+                            },
+                            plugins: { legend: { display: false }, tooltip: { backgroundColor: '#111827', titleColor: '#FFFFFF', bodyColor: '#FFFFFF', callbacks: { label: (c) => `${c.label}: ${c.parsed.y} / 10` } } }
+                        }
+                    });
+                    console.log("cinemaAttendanceChart initialized.");
+                } catch (error) {
+                    console.error("Error initializing cinemaAttendanceChart:", error);
+                }
+            }
+
+            // Use of Funds Chart
+            const useOfFundsCanvas = document.getElementById('useOfFundsChart');
+            if (useOfFundsCanvas) {
+                try {
+                    chartInstances.useOfFundsChart = new Chart(useOfFundsCanvas.getContext('2d'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: [
+                                `${translations[currentLanguage].chart_label_app_dev} ($250K)`,
+                                `${translations[currentLanguage].chart_label_legal} ($50K)`,
+                                `${translations[currentLanguage].chart_label_studio_lic} ($300K)`,
+                                `${translations[currentLanguage].chart_label_smart_tv_ptnrs} ($200K)`,
+                                `${translations[currentLanguage].chart_label_marketing} ($150K)`
+                            ],
+                            datasets: [{
+                                data: [250, 50, 300, 200, 150],
+                                backgroundColor: ['#22D3EE', '#0EA5E9', '#0284C7', '#075985', '#0C4A6E'], /* Shades of Electric Blue */
+                                borderColor: '#111827', // Gray-900 for borders
+                                hoverOffset: 8,
+                                hoverBorderColor: '#FFFFFF' // White on hover
+                            }]
+                        },
+                        options: { 
+                            responsive: true, 
+                            maintainAspectRatio: false, 
+                            plugins: { 
+                                legend: { 
+                                    position: 'bottom', 
+                                    labels:{ 
+                                        padding:15, 
+                                        color: '#E2E8F0', /* slate-200 */ 
+                                        font:{size:11}
+                                    } 
+                                }, 
+                                tooltip: { 
+                                    titleFont: {weight: 'bold'}, 
+                                    bodyFont: {size: 13}, 
+                                    backgroundColor: '#111827', /* gray-900 */ 
+                                    titleColor: '#FFFFFF', /* White */ 
+                                    bodyColor: '#FFFFFF', /* White */ 
+                                    callbacks: { 
+                                        label: (c) => `${c.label.split('(')[0].trim()}: $${c.parsed}K` 
+                                    } 
+                                } 
+                            } 
+                        } 
+                    });
+                    console.log("useOfFundsChart initialized.");
+                } catch (error) {
+                    console.error("Error initializing useOfFundsChart:", error);
+                }
+            }
+
+            // Jacob Premiere vs. Netflix Chart
+            const vsNetflixCanvas = document.getElementById('vsNetflixChart');
+            if (vsNetflixCanvas) {
+                try {
+                    chartInstances.vsNetflixChart = new Chart(vsNetflixCanvas.getContext('2d'), {
+                        type: 'bar',
+                        data: {
+                            labels: [
+                                translations[currentLanguage].chart_label_netflix_margins,
+                                translations[currentLanguage].chart_label_jp_margins,
+                                translations[currentLanguage].chart_label_netflix_content_cost,
+                                translations[currentLanguage].chart_label_jp_content_cost
+                            ],
+                            datasets: [{
+                                data: [23.3, 78.5, 21.32, 0],
+                                backgroundColor: ['#475569', '#22D3EE', '#475569', '#22D3EE'], /* Slate-600 and Electric Blue */
+                                borderColor: ['#334155', '#06B6D4', '#334155', '#06B6D4'], /* Slate-700 and Cyan-600 */
+                                borderWidth: 1,
+                                borderRadius: 5
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                            scales: { 
+                                x: { beginAtZero: true, grid: { color: '#1F2937' }, ticks: { color: '#E2E8F0', callback: (v, i) => i < 2 ? v + '%' : '$' + v + 'B' } }, /* White text, gray-800 grid */
+                                y: { grid: { display: false }, ticks: { color: '#E2E8F0', font:{size:11} } } /* White text */
+                            },
+                            plugins: { legend: { display: false }, tooltip: { backgroundColor: '#111827', titleColor: '#FFFFFF', bodyColor: '#FFFFFF', callbacks: { label: (c) => `${c.label}: ${c.dataIndex < 2 ? c.parsed.x + '%' : '$' + c.parsed.x + 'B'}` } } }
+                        }
+                    });
+                    console.log("vsNetflixChart initialized.");
+                } catch (error) {
+                    console.error("Error initializing vsNetflixChart:", error);
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM Content Loaded. Initializing application.");
+            const accessModal = document.getElementById('access-modal');
+            const fullNameInput = document.getElementById('full-name');
+            const nameError = document.getElementById('name-error');
+            const agreeButton = document.getElementById('agree-button');
+            const mainContent = document.getElementById('main-content');
+
+            // Initialize language first
+            setLanguage(currentLanguage);
+
+            const hasAcknowledged = sessionStorage.getItem('jacobPremiereAcknowledged');
+            if (hasAcknowledged) {
+                console.log("User previously acknowledged. Showing main content.");
+                accessModal.classList.add('hidden');
+                mainContent.classList.remove('hidden-content');
+                document.body.style.overflow = 'auto';
+            } else {
+                console.log("User has not acknowledged. Showing modal.");
+                accessModal.classList.remove('hidden');
+                mainContent.classList.add('hidden-content');
+                document.body.style.overflow = 'hidden';
+            }
+
+            if (agreeButton) {
+                agreeButton.addEventListener('click', () => {
+                    if (fullNameInput.value.trim() === '') {
+                        nameError.classList.remove('hidden');
+                        console.warn("Full name not entered.");
+                    } else {
+                        nameError.classList.add('hidden');
+                        sessionStorage.setItem('jacobPremiereAcknowledged', 'true');
+                        sessionStorage.setItem('jacobPremiereAcknowledgedName', fullNameInput.value.trim());
+                        accessModal.classList.add('hidden');
+                        mainContent.classList.remove('hidden-content');
+                        document.body.style.overflow = 'auto';
+                        console.log("User acknowledged and accessed platform:", fullNameInput.value.trim());
+                    }
+                });
+            }
+
+            // Language selector event listeners
+            document.querySelectorAll('.lang-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    console.log("Language button clicked:", button.getAttribute('data-lang'));
+                    setLanguage(button.getAttribute('data-lang'));
+                });
+            });
+
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-            const menuIconOpen = document.getElementById('menu-icon-open');
-            const menuIconClose = document.getElementById('menu-icon-close');
+            const menuIconOpen = document.getElementById('icon-menu');
+            const iconClose = document.getElementById('icon-close');
 
-            if (mobileMenuButton && mobileMenu && menuIconOpen && menuIconClose) {
+            if (mobileMenuButton && mobileMenu && menuIconOpen && iconClose) {
                 mobileMenuButton.addEventListener('click', () => {
-                    const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
-                    mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                    const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+                    mobileMenuButton.setAttribute('aria-expanded', !expanded);
                     mobileMenu.classList.toggle('hidden');
                     menuIconOpen.classList.toggle('hidden');
-                    menuIconClose.classList.toggle('hidden');
+                    iconClose.classList.toggle('hidden');
+                    console.log("Mobile menu toggled.");
                 });
             }
 
@@ -389,72 +1043,71 @@
                     const targetId = this.getAttribute('href').substring(1);
                     const targetElement = document.getElementById(targetId);
                     if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                        const headerOffset = document.querySelector('header').offsetHeight || 80;
+                        const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+                        
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                        console.log("Smooth scrolling to section:", targetId);
                     }
                     if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenuButton.setAttribute('aria-expanded', 'false');
                         mobileMenu.classList.add('hidden');
                         menuIconOpen.classList.remove('hidden');
-                        menuIconClose.classList.add('hidden');
-                        mobileMenuButton.setAttribute('aria-expanded', 'false');
+                        iconClose.classList.add('hidden');
                     }
                 });
             });
             
-            const sections = document.querySelectorAll('section');
+            const sections = document.querySelectorAll('section[id]');
             const navLinks = document.querySelectorAll('header nav a, #mobile-menu a');
-            const activateLink = (id) => {
+            const headerHeight = document.querySelector('header') ? document.querySelector('header').offsetHeight : 80;
+            
+            function changeNav() {
+                let currentSectionId = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - headerHeight - 50) {
+                        currentSectionId = section.getAttribute('id');
+                    }
+                });
+
                 navLinks.forEach(link => {
                     link.classList.remove('active');
-                    if (link.getAttribute('href').substring(1) === id) {
+                    if (link.getAttribute('href').substring(1) === currentSectionId) {
                         link.classList.add('active');
                     }
                 });
-            };
+            }
+            window.addEventListener('scroll', changeNav);
+            changeNav(); // Initial call
 
-            const observerOptions = { root: null, rootMargin: "0px", threshold: 0.4 };
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        activateLink(entry.target.id);
-                    }
-                });
-            }, observerOptions);
-            sections.forEach(section => observer.observe(section));
-            
             const currentYearSpan = document.getElementById('currentYear');
             if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
 
-            const useOfFundsCanvas = document.getElementById('useOfFundsChart');
-            if (useOfFundsCanvas) {
-                new Chart(useOfFundsCanvas.getContext('2d'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['App Development', 'Legal + Stripe Atlas', 'Studio Licenses', 'Smart TV Partners', 'Marketing'],
-                        datasets: [{
-                            data: [250, 50, 300, 200, 150],
-                            backgroundColor: ['#06B6D4', '#0EA5E9', '#3B82F6', '#2563EB', '#1D4ED8'], /* Shades of Cyan and Blue */
-                            hoverOffset: 4
-                        }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => `${c.label}: $${c.parsed}K` } } } }
-                });
-            }
+            const contactButton = document.getElementById('contact-button');
+            const messageBox = document.getElementById('message-box');
 
-            const vsNetflixCanvas = document.getElementById('vsNetflixChart');
-            if (vsNetflixCanvas) {
-                new Chart(vsNetflixCanvas.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: ['Netflix Margins', 'JP Margins', 'Netflix Content Cost', 'JP Content Cost'],
-                        datasets: [{
-                            data: [23.3, 78.5, 21.32, 0],
-                            backgroundColor: ['#475569', '#06B6D4', '#475569', '#06B6D4'], /* Slate and Cyan */
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                        scales: { x: { beginAtZero: true, ticks: { callback: (v, i) => i < 2 ? v + '%' : '$' + v + 'B' } } },
-                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.label}: ${c.dataIndex < 2 ? c.parsed.x + '%' : '$' + c.parsed.x + 'B'}` } } }
+            if (contactButton && messageBox) {
+                contactButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const email = contactButton.getAttribute('data-email');
+                    
+                    try {
+                        const tempInput = document.createElement('textarea');
+                        tempInput.value = email;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(tempInput);
+                        console.log("Email copied successfully.");
+
+                        messageBox.classList.add('show');
+                        setTimeout(() => {
+                            messageBox.classList.remove('show');
+                        }, 3000);
+                    } catch (err) {
+                        console.error("Failed to copy email to clipboard:", err);
+                        alert("Could not automatically copy email. Please manually copy: " + email);
                     }
                 });
             }
