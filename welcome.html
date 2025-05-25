@@ -1,56 +1,58 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Jacob Premiere</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #0d1117;
-            color: #c9d1d9;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            text-align: center;
-            background-color: #161b22;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-        h1 {
-            color: #58a6ff;
-        }
-        p {
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        .button-link {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #3e4ae5;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .button-link:hover {
-            background-color: #2c38cc;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome – Jacob Premiere</title>
+  <style>
+    body {
+      background-color: #0b0f1a;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+      text-align: center;
+    }
+    .card {
+      background-color: #1b2233;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      max-width: 500px;
+    }
+    h1 {
+      color: #2faaff;
+      margin-bottom: 20px;
+    }
+    p {
+      color: #ccc;
+      margin-bottom: 30px;
+    }
+    a button {
+      padding: 12px 24px;
+      font-size: 16px;
+      color: white;
+      background-color: #2faaff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    a button:hover {
+      background-color: #198dde;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to Jacob Premiere</h1>
-        <p>Thank you for confirming your access. You may now proceed to explore our platform.</p>
-        <a href="platform.html" class="button-link">Enter Platform</a>
-    </div>
+  <div class="card">
+    <h1>Welcome to the Jacob Premiere Platform</h1>
+    <p>You have successfully completed the NDA process. Click below to enter.</p>
+    <a href="index.html">
+      <button>Enter Platform</button>
+    </a>
+  </div>
 </body>
 </html>
