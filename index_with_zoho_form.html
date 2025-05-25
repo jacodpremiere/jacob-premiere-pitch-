@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jacob Premiere: The Global Home Cinema Revolution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Variables CSS para el tema dinámico (Inspirado en Moku: Negro, Blanco, Azul vibrante) */
+        :root {
+            /* Valores predeterminados del tema oscuro */
+            --bg-primary: #000000; /* Negro */
+            --bg-secondary: #0A0A0A; /* Negro ligeramente más claro para secciones */
+            --bg-card: #1A1A1A; /* Gris más oscuro para tarjetas */
+            --text-primary: #FFFFFF; /* Blanco */
+            --text-secondary: #E0E0E0; /* Gris claro */
+            --text-accent-primary: #00BBF9; /* Azul vibrante */
+            --text-accent-secondary: #008AC7; /* Azul más oscuro */
+            --border-color-main: #2C2C2C; /* Borde gris oscuro */
+            --border-color-card: #4A4A4A; /* Borde gris ligeramente más claro para tarjetas */
+            --section-border-left: #00BBF9; /* Azul vibrante para bordes */
+            --hero-gradient-from: rgba(0,0,0,0.7);
+            --hero-gradient-to: rgba(0,0,0,0.7);
+            /* No hay URL de imagen de héroe aquí, el fondo es CSS puro */
+
+            /* Colores de los gráficos - Tema oscuro */
+            --chart-color-1: #00BBF9; 
+            --chart-color-2: #008AC7; 
+            --chart-color-3: #005F99; 
+            --chart-color-4: #003F66; 
+            --chart-color-5: #66D9EF; 
+            --chart-border-color: #000000; /* Negro para borde nítido */
+            --chart-hover-border-color: #FFFFFF; /* Blanco */
+            --chart-grid-color: rgba(255,255,255,0.1); /* Blanco muy tenue para la cuadrícula para contraste */
+            --chart-tick-color: #E0E0E0; /* Gris claro */
+            --chart-bar-color-netflix: #4A4A4A; /* Gris oscuro para mejor contraste */
+            --chart-bar-border-netflix: #6A6A6A; /* Gris medio para mejor contraste */
+            --chart-text-color: #E0E0E0; /* Gris claro */
+            --chart-green-text: #32CD32; /* Verde lima para positivo */
+            --chart-red-text: #DC143C; /* Carmesí para negativo */
+
+            /* Componentes RGB para uso dinámico de rgba() */
+            --text-accent-primary-rgb: 0, 187, 249; 
+            --text-accent-secondary-rgb: 0, 138, 199; 
+        }
+
+        [data-theme='light'] {
+            --bg-primary: #FFFFFF; /* Blanco */
+            --bg-secondary: #F9FAFB; /* gris-50 */
+            --bg-card: #FFFFFF; /* Blanco */
+            --text-primary: #1F2937; /* gris-800 - Texto principal */
+            --text-secondary: #374151; /* gris-700 - Texto secundario más oscuro para contraste */
+            --text-accent-primary: #00BBF9; /* Azul vibrante */
+            --text-accent-secondary: #008AC7; /* Azul más oscuro */
+            --border-color-main: #E5E7EB; /* gris-200 */
+            --border-color-card: #D1D5DB; /* gris-300 */
+            --section-border-left: #00BBF9; /* Azul vibrante para bordes */
+            --hero-gradient-from: rgba(255,255,255,0.7);
+            --hero-gradient-to: rgba(255,255,255,0.7);
+            /* No hay URL de imagen de héroe aquí, el fondo es CSS puro */
+
+            /* Colores de los gráficos - Tema claro */
+            --chart-color-1: #00BBF9;
+            --chart-color-2: #008AC7;
+            --chart-color-3: #005F99;
+            --chart-color-4: #003F66;
+            --chart-color-5: #66D9EF;
+            --chart-border-color: #E5E7EB;
+            --chart-hover-border-color: #1F2937;
+            --chart-grid-color: #F3F4F6;
+            --chart-tick-color: #4B5563;
+            --chart-bar-color-netflix: #9CA3AF;
+            --chart-bar-border-netflix: #D1D5DB;
+            --chart-text-color: #4B5563;
+            --chart-green-text: #16A34A;
+            --chart-red-text: #B91C1C;
+
+            /* Componentes RGB para uso dinámico de rgba() */
+            --text-accent-primary-rgb: 0, 187, 249;
+        }
+
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+        body[data-theme='dark'] { background-color: var(--bg-primary); color: var(--text-primary); }
+        body[data-theme='light'] { background-color: var(--bg-primary); color: var(--text-primary); }
+
+        header { background-color: var(--bg-primary); box-shadow: none; }
+        .section-title { border-left: 4px solid var(--section-border-left); color: var(--text-accent-primary); }
+        .card { background-color: var(--bg-card); border: 1px solid var(--border-color-card); }
+        .stat-card { transition: transform 0.3s ease, box-shadow 0.3s ease; background-color: var(--bg-card); }
+        .stat-card:hover { box-shadow: 0 10px 15px -3px rgba(var(--text-accent-primary-rgb),0.2), 0 4px 6px -2px rgba(var(--text-accent-primary-rgb),0.1); }
+        .chart-container { position: relative; width: 100%; }
+        .roadmap-item::before { content: ''; position: absolute; left: -21px; top: 0; width: 12px; height: 12px; background-color: var(--section-border-left); border-radius: 50%; border: 3px solid var(--bg-primary); box-shadow: 0 0 0 3px var(--section-border-left); }
+        .hero-section { 
+            background: radial-gradient(circle at top left, rgba(var(--text-accent-primary-rgb),0.2) 0%, transparent 60%),
+                        radial-gradient(circle at bottom right, rgba(var(--text-accent-secondary-rgb),0.2) 0%, transparent 60%),
+                        var(--bg-primary); 
+            background-size: cover; 
+            background-position: center; 
+        }
+        .hero-text-container { background-color: transparent; padding: 2.5rem; border-radius: 0.75rem; box-shadow: none; }
+        .accent-text { color: var(--text-accent-secondary); }
+        .primary-accent-primary { 
+            color: var(--text-primary); /* Color base del texto (blanco/negro) para el título principal */
+            background: linear-gradient(to right, var(--text-accent-primary), var(--text-primary), var(--text-accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent; 
+            background-size: 200% 100%; 
+            background-position: 50% 0; 
+        }
+        .button-primary { background-color: var(--section-border-left); color: white; }
+        .button-primary:hover { background-color: var(--text-accent-secondary); }
+        .section-intro-text { color: var(--text-secondary); }
+
+        /* Estilos específicos del modal (se mantienen oscuros para consistencia/seguridad) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        .modal-content { background-color: #111827; border: 1px solid #1F2937; padding: 2.5rem; border-radius: 0.75rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); max-width: 38rem; width: 90%; max-height: 90vh; overflow-y: auto; color: #FFFFFF; text-align: center; }
+        .modal-conditions { text-align: left; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; color: #E0E0E0; max-height: 40vh; overflow-y: auto; padding-right: 0.5rem; border-top: 1px solid #1F2937; border-bottom: 1px solid #1F2937; padding-top: 1rem; padding-bottom: 1rem; }
+        .modal-conditions h3 { font-weight: bold; margin-bottom: 0.5rem; color: #00BBF9; /* Azul vibrante */ }
+        .modal-input { width: 100%; padding: 0.75rem; border-radius: 0.5rem; background-color: #1F2937; border: 1px solid #334155; color: #FFFFFF; margin-bottom: 1rem; }
+        .modal-button { width: 100%; padding: 0.75rem; border-radius: 0.5rem; background-color: #00BBF9; /* Azul vibrante */ color: white; font-weight: bold; transition: background-color 0.2s; cursor: pointer; }
+        .modal-button:hover { background-color: #008AC7; /* Azul más oscuro */ }
+        .hidden-content { display: none; }
+
+        /* Cuadro de mensaje para confirmación de copia */
+        .message-box {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background-color: var(--bg-secondary); color: var(--text-primary);
+            padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            opacity: 0; transition: opacity 0.5s ease-in-out; z-index: 1001; 
+        }
+        .message-box.show { opacity: 1; }
+
+        /* Estilos del botón de alternancia de tema - Oculto ya que el tema es fijo */
+        .theme-toggle-button { display: none; } 
+    </style>
+</head>
+<body class="antialiased" data-theme="dark">
+
+    
+<div id="access-modal" class="modal-overlay">
+  <div class="modal-content">
+    <iframe 
+      aria-label="Non-Disclosure Agreement – Jacob Premiere"
+      frameborder="0"
+      style="height:600px;width:100%;border:none;"
+      src="https://forms.zohopublic.com/founderjacobp1/form/NonDisclosureAgreementJacobPremiere1/formperma/S2QrwuPjAO9wlw2VZ4yjzivuQ9noZerJqBm9wF7lIZQ">
+    </iframe>
+  </div>
+</div>
+
+            
+            <label for="full-name" class="block text-left text-sm font-semibold mb-2 mt-6">Your Full Name (required for access acknowledgment):</label>
+            <input type="text" id="full-name" class="modal-input" placeholder="Type your full name here">
+            <p id="name-error" class="text-red-400 text-sm mb-2 hidden">Please enter your full name to proceed.</p>
+            <button id="agree-button" class="modal-button">Acknowledge & Access Platform</button>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden-content">
+        <header class="sticky top-0 z-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <div class="flex items-center">
+                        <a href="#hero" class="text-3xl font-extrabold primary-accent-primary tracking-tight">Jacob Premiere</a>
+                    </div>
+                    <div class="language-theme-selectors">
+                        <button class="theme-toggle-button" id="theme-toggle">
+                            <span class="sr-only">Toggle theme</span>
+                            <svg id="moon-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                            <svg id="sun-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.325 6.675l-.707.707M6.343 6.343l-.707-.707m12.728 0l-.707-.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="hero" class="hero-section h-[70vh] md:h-[90vh] flex items-center justify-center text-center scroll-mt-20">
+            <div class="hero-text-container">
+                <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 tracking-tight leading-tight primary-accent-primary">
+                    Jacob Premiere
+                </h1>
+                <p class="text-2xl sm:text-3xl font-semibold primary-accent-primary">The Global Home Cinema Revolution</p>
+            </div>
+        </section>
+
+        <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <section id="introduction" class="py-16">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12">Introduction</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed">Jacob Premiere is a secure, direct-to-home cinematic experience platform. It offers blockbuster premieres, immersive interactivity, and a new revenue model for filmmakers—combining high-end technology with emotional engagement and blockchain-based monetization.</p>
+            </section>
+
+            <section id="what-is-jp" class="py-16 bg-secondary card rounded-xl shadow-2xl p-6 md:p-12">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12">What is Jacob Premiere?</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed">Jacob Premiere is a premium digital platform that redefines home entertainment by bringing the cinema experience directly to you.</p>
+                <ul class="list-none space-y-6 text-xl">
+                    <li class="flex items-start"><span class="text-accent-primary text-3xl mr-4">🎬</span> Streams first-run movies directly to Smart TVs.</li>
+                    <li class="flex items-start"><span class="text-accent-primary text-3xl mr-4">🔒</span> Prevents piracy with Axinom DRM + forensic watermarking.</li>
+                    <li class="flex items-start"><span class="text-accent-primary text-3xl mr-4">🎁</span> Rewards users with collectible experiences.</li>
+                    <li class="flex items-start"><span class="text-accent-primary text-3xl mr-4">🤝</span> Shares up to 80% of revenue with creators.</li>
+                </ul>
+            </section>
+
+            <section id="real-time-dubbing" class="py-16">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12">Real-Time Multi-Language Dubbing - A Global Breakthrough</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed">Jacob Premiere integrates cutting-edge AI-powered dubbing technology, allowing users to experience movie premieres in any language instantly — with voiceovers generated in real time that match the emotion, tone, and timing of the original performance.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-semibold primary-accent-primary mb-4">Key Features:</h3>
+                        <ul class="list-disc list-inside space-y-2 text-secondary">
+                            <li>Instant dubbing in over 40+ languages.</li>
+                            <li>AI-generated voices trained to sound natural, expressive, and culturally adapted.</li>
+                            <li>Lip-sync matching with real-time dialogue rendering.</li>
+                            <li>Automatic language detection based on user location or preference.</li>
+                            <li>Option to switch between original audio, dubbed voice, or subtitles with a single click.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold primary-accent-primary mb-4">Strategic Impact:</h3>
+                        <ul class="list-disc list-inside space-y-2 text-secondary">
+                            <li>Expands global reach without waiting for post-production translation.</li>
+                            <li>Empowers inclusivity by offering access in native language at launch.</li>
+                            <li>Boosts engagement & immersion, especially for non-English speaking households.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="feel-the-hero" class="py-16">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12">Feel The Hero - Interactive Experience</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed">"Live the Emotion. Own the Story." Feel The Hero is our exclusive feature that deepens viewer-character bonds, transforming passive watching into an immersive, real-time interactive event.</p>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <p class="mb-6 leading-relaxed">Imagine watching your favorite character scream, fight, or fall in love - and your smart-connected collectible vibrates, lights up, or plays audio synced to the scene. This real-time feedback creates deep viewer-character bonds.</p>
+                        <h3 class="text-2xl font-semibold primary-accent-primary mb-4 mt-6">Monetization & Formats:</h3>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Sell physical/digital collectibles ($5 – $60 USD).</li>
+                            <li>Monthly subscription for interactive premium content.</li>
+                            <li>Integrated with Axinom DRM for security, functions only during active playback on Jacob Premiere.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="membership" class="py-16 bg-secondary card rounded-xl shadow-2xl p-6 md:p-12">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12">Membership Model</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed">Our flexible membership model provides premium access and exceptional value, catering to diverse viewing habits while offering additional options for the most avid cinephiles.</p>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-3xl font-bold primary-accent-primary mb-6">Monthly Membership: $25/month</h3>
+                        <ul class="list-disc list-inside space-y-3">
+                            <li>Includes access to 2 blockbuster premieres per month.</li>
+                            <li>After 2 weeks, full access to the entire film catalog.</li>
+                            <li>Feel The Hero interactive experience (with compatible device).</li>
+                            <li>Access to exclusive collectible marketplace.</li>
+                            <li>Bonus behind-the-scenes content.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="3xl font-bold primary-accent-primary mb-6">Additional Premieres: $15 each</h3>
+                        <p>For members who wish to watch more than 2 premieres in the same month.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="market-opportunity" class="py-16">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12">Global Market & Opportunity</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed">The entertainment industry is undergoing a massive transformation, presenting an unprecedented opportunity for Jacob Premiere. We are strategically positioned to capture a significant share of this evolving market by directly addressing consumer demands and leveraging global digital infrastructure.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                    <div class="stat-card p-8 rounded-xl shadow-lg text-center"><p class="text-6xl font-bold text-accent-primary">1.2B+</p><p class="mt-2">Smart TVs Worldwide</p></div>
+                    <div class="stat-card p-8 rounded-xl shadow-lg text-center"><p class="text-6xl font-bold text-accent-primary">42% YoY</p><p class="mt-2">Streaming Growth</p></div>
+                    <div class="stat-card p-8 rounded-xl shadow-lg text-center"><p class="text-6xl font-bold text-accent-primary">$10B+</p><p class="mt-2">Revenue Potential (20% Pen.)</p></div>
+                    <div class="stat-card bg-red-700 p-8 rounded-xl shadow-lg text-center text-white"><p class="text-4xl font-bold">Piracy Costs</p><p class="text-xl mt-1">Billions Yearly</p></div>
+                </div>
+                <div class="card p-8 rounded-xl shadow-xl">
+                    <h3 class="text-2xl font-semibold primary-accent-primary mb-6">Traditional Cinema Attendance: A Shifting Landscape</h3>
+                    <p class="mb-6 text-secondary leading-relaxed">Recent surveys indicate a significant shift in consumer behavior regarding cinema attendance. The traditional cinema model faces challenges due to factors like limited time and high costs, leading to a strong preference for home entertainment.</p>
+                    <div class="chart-container mx-auto w-full max-w-md h-80 sm:h-96">
+                        <canvas id="cinemaAttendanceChart"></canvas>
+                    </div>
+                    <p class="text-sm text-secondary mt-4 text-center">Based on current trends, for every 10 people, only 2 are regularly visiting traditional cinemas, while the majority prefer the convenience of home viewing.</p>
+                </div>
+            </section>
+
+            <section id="comparison" class="py-16 bg-secondary card rounded-xl shadow-2xl p-6 md:p-12">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12">Visual Graphic Comparison: Jacob Premiere vs. Traditional</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed">Jacob Premiere offers a superior model compared to traditional cinema, addressing key industry challenges and providing enhanced value for both creators and consumers.</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-gray-900 rounded-lg shadow-md text-left text-lg">
+                        <thead>
+                            <tr class="bg-gray-700 text-accent-primary">
+                                <th class="py-3 px-4 uppercase font-semibold text-sm">Metric</th>
+                                <th class="py-3 px-4 uppercase font-semibold text-sm">Traditional Cinema</th>
+                                <th class="py-3 px-4 uppercase font-semibold text-sm">Jacob Premiere</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-700">
+                                <td class="py-3 px-4">CapEx</td>
+                                <td class="py-3 px-4">High physical locations</td>
+                                <td class="py-3 px-4">Low - cloud-based</td>
+                            </tr>
+                            <tr class="border-b border-gray-700 bg-gray-800">
+                                <td class="py-3 px-4">Revenue Split</td>
+                                <td class="py-3 px-4">30% to studio</td>
+                                <td class="py-3 px-4">80% to studio</td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="py-3 px-4">Piracy Risk</td>
+                                <td class="py-3 px-4">High (cam-rips)</td>
+                                <td class="py-3 px-4">None (forensic DRM)</td>
+                            </tr>
+                            <tr class="border-b border-gray-700 bg-gray-800">
+                                <td class="py-3 px-4">Seating Capacity</td>
+                                <td class="py-3 px-4">Limited</td>
+                                <td class="py-3 px-4">Unlimited global</td>
+                            </tr>
+                            <tr class="border-b border-gray-700">
+                                <td class="py-3 px-4">Environmental Cost</td>
+                                <td class="py-3 px-4">High</td>
+                                <td class="py-3 px-4">Minimal</td>
+                            </tr>
+                            <tr class="bg-gray-800">
+                                <td class="py-3 px-4">User Experience</td>
+                                <td class="py-3 px-4">Passive</td>
+                                <td class="py-3 px-4">Immersive & interactive</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="roadmap" class="py-16">
+                <h2 class="section-title pl-6 text-4xl md:text-5xl font-bold mb-12">Roadmap & Future Vision</h2>
+                <p class="mb-12 text-xl section-intro-text leading-relaxed">Jacob Premiere is on a clear path to launch and global expansion. Our roadmap outlines key milestones, and our vision extends to continuous innovation, solidifying our position as the leader in the future of home entertainment.</p>
+                <div class="card p-8 rounded-xl shadow-xl">
+                    <h3 class="text-3xl font-semibold primary-accent-primary mb-10">2025-2027 Execution Plan</h3>
+                    <div class="relative pl-10 border-l-4 border-accent-primary space-y-12">
+                        <div class="roadmap-item"><h4 class="text-2xl font-semibold text-white">Q2 2025: Foundation</h4><p class="text-secondary mt-1">Incorporation, platform MVP, legal setup.</p></div>
+                        <div class="roadmap-item"><h4 class="text-2xl font-semibold text-white">Q3 2025: Development & Funding</h4><p class="text-secondary mt-1">Launch investor campaign (WeFunder), Sign first studio deals.</p></div>
+                        <div class="roadmap-item"><h4 class="text-2xl font-semibold text-white">Q4 2025: Pilot & Integration</h4><p class="text-secondary mt-1">Pilot Program Launch, Start TV manufacturer partnerships.</p></div>
+                        <div class="roadmap-item"><h4 class="text-2xl font-semibold text-white">Q1 2026: Public Launch & Rollout</h4><p class="text-secondary mt-1">Public launch + Feel The Hero rollout.</p></div>
+                        <div class="roadmap-item"><h4 class="text-2xl font-semibold text-white">Q2 2026 & Beyond: Global Expansion</h4><p class="text-secondary mt-1">Expand collectibles marketplace + international content onboarding.</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="join-us" class="py-24 text-center rounded-xl shadow-2xl" style="background: linear-gradient(to bottom right, var(--bg-secondary), var(--bg-primary)); border: 1px solid var(--text-accent-primary); box-shadow: 0 10px 20px rgba(var(--text-accent-primary-rgb), 0.3);">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-5xl md:text-6xl font-extrabold text-white mb-8">Let's Premiere the Future!</h2>
+                    <p class="text-secondary mb-12 max-w-3xl mx-auto leading-relaxed">Join the cinematic revolution. Invest, partner, or license our platform and help redefine how the world watches movies.</p>
+                    <p class="text-2xl font-bold text-white mt-4">
+                        <a href="mailto:founder@jacobpremiere.com" class="text-accent-primary hover:text-accent-secondary transition-colors duration-300">founder@jacobpremiere.com</a>
+                        <span class="text-white ml-2">Founder & CEO</span>
+                    </p>
+                    <div class="mt-8">
+                        <a href="https://x.com/JacobPremiere" target="_blank" rel="noopener noreferrer" class="inline-block text-primary hover:text-accent-primary transition-colors duration-300">
+                            <svg class="h-8 w-8 inline-block mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.814L4.99 21.75H1.68l7.73-8.825L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                            Follow us on X
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center py-12 mt-16 text-sm text-gray-400 border-t border-gray-700">
+            <p>© <span id="currentYear"></span> Jacob Premiere Inc. All Rights Reserved.</p>
+            <p>Delaware C-Corp. Innovating the Future of Cinema.</p>
+        </footer>
+    </div> 
+
+    <div id="message-box" class="message-box">
+        Email copied to clipboard!
+    </div>
+
+    <script>
+        let chartInstances = {}; // Para almacenar instancias de gráficos para actualizaciones
+
+        function updateCharts() {
+            // Destruir gráficos existentes si los hay
+            for (const chartId in chartInstances) {
+                if (chartInstances[chartId]) {
+                    chartInstances[chartId].destroy();
+                    delete chartInstances[chartId];
+                }
+            }
+            chartInstances = {}; // Restablecer instancias de gráficos
+
+            // Gráfico de asistencia al cine (simplificado para el enfoque de la página de destino)
+            const cinemaAttendanceCanvas = document.getElementById('cinemaAttendanceChart');
+            if (cinemaAttendanceCanvas && typeof Chart !== 'undefined') { // Verificar si Chart está definido
+                try {
+                    // Configurar los valores predeterminados de Chart.js para el tema actual
+                    Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--chart-tick-color');
+                    Chart.defaults.borderColor = getComputedStyle(document.body).getPropertyValue('--chart-grid-color');
+
+                    // Crear gradiente para la primera barra (Go to Cinema)
+                    const ctx1 = cinemaAttendanceCanvas.getContext('2d');
+                    // Asegúrate de que la altura del gradiente sea igual o mayor que la altura máxima de la barra
+                    // Puedes obtener la altura del canvas si es necesario o usar un valor fijo grande
+                    const gradientHeight = cinemaAttendanceCanvas.offsetHeight; // Usar offsetHeight para la altura visible
+                    const gradient1 = ctx1.createLinearGradient(0, 0, 0, gradientHeight); 
+                    gradient1.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--text-primary')); // Blanco en la parte superior
+                    gradient1.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--text-accent-primary')); // Azul vibrante en la base
+
+                    // Crear gradiente para la segunda barra (Prefer Home)
+                    const ctx2 = cinemaAttendanceCanvas.getContext('2d');
+                    const gradient2 = ctx2.createLinearGradient(0, 0, 0, gradientHeight); 
+                    gradient2.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--text-primary')); // Blanco en la parte superior
+                    gradient2.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--text-accent-secondary')); // Azul más oscuro en la base
+
+
+                    chartInstances.cinemaAttendanceChart = new Chart(cinemaAttendanceCanvas.getContext('2d'), {
+                        type: 'bar',
+                        data: {
+                            labels: ["Go to Cinema", "Prefer Home"], 
+                            datasets: [{
+                                data: [2, 8],
+                                backgroundColor: [gradient1, gradient2], /* Usar los gradientes */
+                                borderColor: getComputedStyle(document.body).getPropertyValue('--bg-primary'), /* Borde negro */
+                                borderWidth: 1,
+                                borderRadius: 5
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            scales: {
+                                x: { beginAtZero: true, max: 10, ticks: { stepSize: 1, color: getComputedStyle(document.body).getPropertyValue('--text-primary') }, grid: { color: getComputedStyle(document.body).getPropertyValue('--chart-grid-color') } }, 
+                                y: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-primary') }, grid: { color: getComputedStyle(document.body).getPropertyValue('--chart-grid-color') } }
+                            },
+                            plugins: { legend: { display: false }, tooltip: { backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-secondary'), titleColor: getComputedStyle(document.body).getPropertyValue('--text-primary'), bodyColor: getComputedStyle(document.body).getPropertyValue('--text-primary'), callbacks: { label: (c) => `${c.label}: ${c.parsed.y} / 10` } } }
+                        }
+                    });
+                } catch (error) {
+                    console.error("Error initializing cinemaAttendanceChart:", error);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const accessModal = document.getElementById('access-modal');
+            const fullNameInput = document.getElementById('full-name');
+            const nameError = document.getElementById('name-error');
+            const agreeButton = document.getElementById('agree-button');
+            const mainContent = document.getElementById('main-content');
+            const body = document.body;
+
+            // Establecer el tema inicial en oscuro y eliminar los botones de alternancia de tema
+            body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('jacobPremiereTheme', 'dark'); // Asegurar la persistencia
+            // No hay botones de alternancia de tema en la página de destino, por lo que no es necesario ocultarlos aquí explícitamente
+
+            // Actualización inicial del gráfico (solo se utiliza cinemaAttendanceChart en la página de destino)
+            updateCharts(); 
+
+            const hasAcknowledged = sessionStorage.getItem('jacobPremiereAcknowledged');
+            if (hasAcknowledged) {
+                accessModal.classList.add('hidden');
+                mainContent.classList.remove('hidden-content');
+                document.body.style.overflow = 'auto';
+            } else {
+                accessModal.classList.remove('hidden');
+                mainContent.classList.add('hidden-content');
+                document.body.style.overflow = 'hidden';
+            }
+
+            if (agreeButton) {
+                agreeButton.addEventListener('click', () => {
+                    if (fullNameInput.value.trim() === '') {
+                        nameError.classList.remove('hidden');
+                    } else {
+                        nameError.classList.add('hidden');
+                        sessionStorage.setItem('jacobPremiereAcknowledged', 'true');
+                        sessionStorage.setItem('jacobPremiereAcknowledgedName', fullNameInput.value.trim());
+                        accessModal.classList.add('hidden');
+                        mainContent.classList.remove('hidden-content');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+
+            const currentYearSpan = document.getElementById('currentYear');
+            if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
+
+            const contactButton = document.getElementById('contact-button');
+            const messageBox = document.getElementById('message-box');
+
+            if (contactButton && messageBox) {
+                contactButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const email = contactButton.getAttribute('data-email');
+                    
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = email;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+
+                    messageBox.classList.add('show');
+                    setTimeout(() => {
+                        messageBox.classList.remove('show');
+                    }, 3000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
