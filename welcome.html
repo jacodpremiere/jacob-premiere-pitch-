@@ -11,47 +11,45 @@
       color: #ffffff;
       font-family: 'Segoe UI', sans-serif;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 100vh;
-      flex-direction: column;
+      margin: 0;
     }
-    .card {
+    .container {
+      text-align: center;
       background-color: #111827;
       padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      text-align: center;
-      max-width: 500px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
     }
     h1 {
-      font-size: 1.8rem;
-      color: #60A5FA;
+      color: #4db8ff;
+      margin-bottom: 15px;
     }
     p {
-      margin-top: 12px;
-      color: #D1D5DB;
+      color: #cbd5e1;
+      margin-bottom: 30px;
     }
     a.button {
-      margin-top: 24px;
-      display: inline-block;
-      background-color: #1E3A8A;
+      background-color: #4b7bec;
       color: #ffffff;
       padding: 12px 24px;
-      border-radius: 8px;
+      border-radius: 6px;
       text-decoration: none;
       font-weight: bold;
+      transition: background 0.3s;
     }
     a.button:hover {
-      background-color: #2563EB;
+      background-color: #3867d6;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Welcome to Jacob Premiere</h1>
-    <p>Thank you for confirming your access. You may now proceed to explore our platform.</p>
-    <a href="#" class="button">Enter Platform</a>
+  <div class="container">
+    <h1>Access Granted</h1>
+    <p>Thank you for completing the NDA. Click below to continue.</p>
+    <a href="https://jacobpremiere.com/access.html" class="button">Enter Platform</a>
   </div>
 </body>
 </html>
