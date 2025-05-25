@@ -7,14 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Opciones de visualización y contenido:
-        - Modal de acceso: Objetivo: Seguro e informativo. Método: Superposición a pantalla completa con texto NDA resumido, campo de nombre, CHECKBOX de aceptación y botón de envío. Interacción: Entrada obligatoria, almacenamiento local para persistencia. Justificación: Aplica el reconocimiento de confidencialidad antes del acceso al contenido.
+        - Modal de acceso: Objetivo: Seguro e informativo. Método: Superposición a pantalla completa con texto NDA resumido, campo de nombre y botón de envío. Interacción: Entrada obligatoria, almacenamiento local para persistencia. Justificación: Aplica el reconocimiento de confidencialidad antes del acceso al contenido.
         - Sección principal (Hero): Objetivo: Compromiso inmediato. Método: Gran titular, subtítulo. Fondo: Negro puro con sutil flujo de luz azul vibrante generado por CSS (SIN imagen/texto externo). Texto: Blanco/Color de acento primario. Justificación: Captura la atención y el mensaje central.
         - Introducción: Objetivo: Proporcionar contexto. Método: Párrafo conciso. Justificación: Establece el escenario.
         - ¿Qué es Jacob Premiere?: Objetivo: Definir la plataforma. Método: Descripción de texto con puntos clave (iconos Unicode). Justificación: Explica la oferta principal de forma sencilla.
         - Doblaje multilingüe en tiempo real: Objetivo: Detallar la tecnología principal. Método: Título, párrafo introductorio, características clave (iconos Unicode), impacto estratégico. Justificación: Destaca la innovación.
         - Feel The Hero: Objetivo: Resaltar característica única. Método: Eslogan, texto descriptivo. SIN marcador de posición visual conceptual. Justificación: Enfatiza el compromiso emocional.
         - Modelo de membresía: Objetivo: Explicar precios. Método: Puntos concisos. Justificación: Visión general clara de los niveles de acceso.
-        - Oportunidad de mercado: Objetivo: Mostrar potencial de mercado. Método: Estadísticas clave (estilo HTML/CSS). Colores del gráfico de asistencia al cine actualizados a azul vibrante. Justificación: Cuantifica el tamaño del mercado y visualiza la asistencia.
+        - Oportunidad de mercado: Objetivo: Mostrar potencial de mercado. Método: Estadísticas clave (estilo HTML/CSS). Colores del gráfico de asistencia al cine actualizados a azul vibrante con gradiente. Justificación: Cuantifica el tamaño del mercado y visualiza la asistencia.
         - Comparación: Objetivo: Diferenciarse de la competencia. Método: Tabla simplificada. Justificación: Destaca las ventajas competitivas.
         - Hoja de ruta: Objetivo: Mostrar planes futuros. Método: Puntos concisos. Justificación: Describe la progresión estratégica.
         - Llamada a la acción final: Objetivo: Impulsar la acción. Método: Enlace de correo electrónico prominente. Interacción: Clicable. Justificación: Punto de conversión principal.
@@ -148,27 +148,47 @@
 
         /* Estilos del botón de alternancia de tema - Oculto ya que el tema es fijo */
         .theme-toggle-button { display: none; } 
+
+        /* Estilos para el botón de confirmación tipo slider */
+        .agreement-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+            margin-top: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .agreement-toggle.not-accepted {
+            background-color: #DC2626; /* Rojo para no aceptado */
+            color: white;
+        }
+
+        .agreement-toggle.accepted {
+            background-color: #16A34A; /* Verde para aceptado */
+            color: white;
+        }
     </style>
 </head>
 <body class="antialiased" data-theme="dark">
 
     <div id="access-modal" class="modal-overlay">
         <div class="modal-content">
-            <h2 class="text-3xl font-bold primary-accent-primary">Confidentiality Agreement & Access Conditions</h2>
+            <h2 class="text-3xl font-bold primary-accent-primary mb-6">🔒 Confidentiality Agreement & Access Conditions</h2>
             <p class="mb-4 text-secondary">By proceeding, you acknowledge and agree to the following conditions regarding the confidential information contained within this platform:</p>
             
             <div class="modal-conditions text-left">
-                <h3 class="text-xl">1. Definition of Confidential Information</h3>
-                <p class="mb-2">This includes all technical, commercial, financial, market, strategic, operational, intellectual property, software (including source code), and business plans related to Jacob Premiere. This information is proprietary and highly sensitive.</p>
-                
-                <h3 class="text-xl mt-4">2. Your Obligations</h3>
-                <ul class="list-disc list-inside ml-4 space-y-1">
-                    <li>Maintain strict confidentiality of all disclosed information.</li>
-                    <li>Do not disclose it to any third parties without prior written consent from Jacob Premiere Inc.</li>
-                    <li>Use this information solely for the purpose of evaluating Jacob Premiere for a potential partnership or investment.</li>
-                    <li>Protect the information with at least the same level of care you use for your own confidential data.</li>
-                </ul>
+                <h3 class="text-xl mt-4">1. Purpose of Access</h3>
+                <p class="mb-2">The purpose of providing access to this platform is solely for the evaluation of Jacob Premiere's business model, technology, and market opportunity for potential investment or partnership discussions. Any other use is strictly prohibited.</p>
 
+                <h3 class="text-xl mt-4">2. Data Protection Standards</h3>
+                <p class="mb-2">You agree to protect all disclosed information with the highest level of care, preventing unauthorized access, disclosure, or use. This includes implementing reasonable security measures to safeguard the data on your systems and ensuring compliance with applicable data protection regulations.</p>
+                
                 <h3 class="text-xl mt-4">3. Intellectual Property</h3>
                 <p class="mb-2">All intellectual property rights related to the disclosed information remain solely with Jacob Premiere Inc. No licenses or rights are granted or implied by your access.</p>
                 
@@ -178,12 +198,18 @@
             <label for="full-name" class="block text-left text-sm font-semibold mb-2 mt-6">Your Full Name (required for access acknowledgment):</label>
             <input type="text" id="full-name" class="modal-input" placeholder="Type your full name here">
             <p id="name-error" class="text-red-400 text-sm mb-2 hidden">Please enter your full name to proceed.</p>
-            <div class="mt-4">
-                <input type="checkbox" id="agreement-checkbox" class="mr-2">
-                <label for="agreement-checkbox" class="text-secondary text-sm">I confirm that I have read and accept the terms of the Non-Disclosure Agreement above.</label>
-                <p id="checkbox-error" class="text-red-400 text-sm mt-2 hidden">You must accept the terms to proceed.</p>
+            
+            <div id="agreement-toggle" class="agreement-toggle not-accepted">
+                Click to Accept NDA Terms
             </div>
-            <button id="agree-button" class="modal-button mt-6">Acknowledge & Access Platform</button>
+            <p id="toggle-error" class="text-red-400 text-sm mt-2 hidden">You must accept the NDA terms to proceed.</p>
+
+            <label for="signature-canvas" class="block text-left text-sm font-semibold mb-2 mt-6">Digital Signature (optional, for acknowledgment):</label>
+            <canvas id="signature-canvas" class="border border-secondary rounded-md bg-gray-900 cursor-crosshair" width="300" height="100"></canvas>
+            <button id="clear-signature" class="modal-button mt-2 bg-gray-700 hover:bg-gray-600 text-white text-sm py-2 px-4">Clear Signature</button>
+            <p id="signature-error" class="text-red-400 text-sm mt-2 hidden">Please provide a digital signature.</p>
+
+            <button id="agree-button" class="modal-button mt-6">🔒 Acknowledge & Access Platform</button>
         </div>
     </div>
 
@@ -427,30 +453,21 @@
                     Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--chart-tick-color');
                     Chart.defaults.borderColor = getComputedStyle(document.body).getPropertyValue('--chart-grid-color');
 
-                    // Crear gradiente para la primera barra (Go to Cinema)
-                    const ctx1 = cinemaAttendanceCanvas.getContext('2d');
-                    // Asegúrate de que la altura del gradiente sea igual o mayor que la altura máxima de la barra
-                    // Puedes obtener la altura del canvas si es necesario o usar un valor fijo grande
-                    const gradientHeight = cinemaAttendanceCanvas.offsetHeight; 
-                    const gradient1 = ctx1.createLinearGradient(0, 0, 0, gradientHeight); 
-                    gradient1.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--text-primary')); // Blanco en la parte superior
-                    gradient1.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--text-accent-primary')); // Azul vibrante en la base
+                    // Obtener el contexto del canvas
+                    const ctx = cinemaAttendanceCanvas.getContext('2d');
+                    
+                    // Colores sólidos para las barras, directamente definidos
+                    const barColor1 = '#66D9EF'; // Azul claro vibrante
+                    const barColor2 = '#00BBF9'; // Azul vibrante principal
 
-                    // Crear gradiente para la segunda barra (Prefer Home)
-                    const ctx2 = cinemaAttendanceCanvas.getContext('2d');
-                    const gradient2 = ctx2.createLinearGradient(0, 0, 0, gradientHeight); 
-                    gradient2.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--text-primary')); // Blanco en la parte superior
-                    gradient2.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--text-accent-secondary')); // Azul más oscuro en la base
-
-
-                    chartInstances.cinemaAttendanceChart = new Chart(cinemaAttendanceCanvas.getContext('2d'), {
+                    chartInstances.cinemaAttendanceChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
                             labels: ["Go to Cinema", "Prefer Home"], 
                             datasets: [{
                                 data: [2, 8],
-                                backgroundColor: [gradient1, gradient2], /* Usar los gradientes */
-                                borderColor: getComputedStyle(document.body).getPropertyValue('--bg-primary'), /* Borde negro */
+                                backgroundColor: [barColor1, barColor2], /* Usar colores sólidos directos */
+                                borderColor: '#000000', /* Borde negro */
                                 borderWidth: 1,
                                 borderRadius: 5
                             }]
@@ -477,8 +494,90 @@
             const agreeButton = document.getElementById('agree-button');
             const mainContent = document.getElementById('main-content');
             const body = document.body;
+            const agreementToggle = document.getElementById('agreement-toggle'); // Get the new toggle button
+            const toggleError = document.getElementById('toggle-error'); // Correct ID for toggle error
+            const signatureCanvas = document.getElementById('signature-canvas');
+            const clearSignatureButton = document.getElementById('clear-signature');
+            const signatureError = document.getElementById('signature-error');
 
-            // Establecer el tema inicial en oscuro y eliminar los botones de alternancia de tema
+            let isDrawing = false;
+            let signatureDrawn = false;
+            let ctx; // Declare ctx here
+
+            // Initialize canvas context only if canvas element exists
+            if (signatureCanvas) {
+                ctx = signatureCanvas.getContext('2d');
+                resizeCanvas(); // Call resize once on load
+            }
+
+
+            function resizeCanvas() {
+                // Set canvas display size
+                signatureCanvas.style.width = '100%';
+                signatureCanvas.style.height = '100px'; // Fixed height for consistency
+
+                // Set canvas internal resolution
+                signatureCanvas.width = signatureCanvas.offsetWidth;
+                signatureCanvas.height = signatureCanvas.offsetHeight;
+                
+                // Clear and reset context properties after resize
+                ctx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--text-primary'); // Signature color
+            }
+
+            // Initial resize and event listener for window resize
+            window.addEventListener('resize', resizeCanvas);
+
+            // Drawing logic for signature canvas
+            function startDrawing(e) {
+                isDrawing = true;
+                signatureDrawn = true; // User has started drawing
+                if (signatureError) signatureError.classList.add('hidden'); // Hide error once drawing starts
+                ctx.beginPath();
+                const rect = signatureCanvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                ctx.moveTo(x, y);
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                const rect = signatureCanvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+                ctx.closePath();
+            }
+
+            if (signatureCanvas) { // Only add listeners if canvas exists
+                signatureCanvas.addEventListener('mousedown', startDrawing);
+                signatureCanvas.addEventListener('mousemove', draw);
+                signatureCanvas.addEventListener('mouseup', stopDrawing);
+                signatureCanvas.addEventListener('mouseout', stopDrawing); // Stop drawing if mouse leaves canvas
+
+                signatureCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDrawing(e); });
+                signatureCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); });
+                signatureCanvas.addEventListener('touchend', stopDrawing);
+                signatureCanvas.addEventListener('touchcancel', stopDrawing);
+            }
+
+            if (clearSignatureButton) { // Only add listener if button exists
+                clearSignatureButton.addEventListener('click', () => {
+                    ctx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+                    signatureDrawn = false; // Reset signature status
+                    if (signatureError) signatureError.classList.add('hidden'); // Hide error
+                });
+            }
+
+
+            // Set initial theme to dark and remove theme toggle buttons
             body.setAttribute('data-theme', 'dark');
             localStorage.setItem('jacobPremiereTheme', 'dark'); // Asegurar la persistencia
             // No hay botones de alternancia de tema en la página de destino, por lo que no es necesario ocultarlos aquí explícitamente
@@ -497,21 +596,58 @@
                 document.body.style.overflow = 'hidden';
             }
 
+            // Logic for the custom agreement toggle button
+            let agreementAccepted = false;
+            if (agreementToggle) {
+                agreementToggle.addEventListener('click', () => {
+                    agreementAccepted = !agreementAccepted;
+                    if (agreementAccepted) {
+                        agreementToggle.classList.remove('not-accepted');
+                        agreementToggle.classList.add('accepted');
+                        agreementToggle.textContent = 'NDA Terms Accepted ✓';
+                        if (toggleError) toggleError.classList.add('hidden'); // Hide error if accepted
+                    } else {
+                        agreementToggle.classList.remove('accepted');
+                        agreementToggle.classList.add('not-accepted');
+                        agreementToggle.textContent = 'Click to Accept NDA Terms';
+                    }
+                });
+            }
+
+
             if (agreeButton) {
                 agreeButton.addEventListener('click', () => {
-                    const checkboxError = document.getElementById('checkbox-error');
+                    let isValid = true;
+
+                    // 1. Validate Full Name
                     if (fullNameInput.value.trim() === '') {
-                        nameError.classList.remove('hidden');
-                        if (checkboxError) checkboxError.classList.add('hidden'); // Hide if other error is shown
-                    } else if (!document.getElementById('agreement-checkbox').checked) {
-                        nameError.classList.add('hidden');
-                        if (checkboxError) checkboxError.classList.remove('hidden');
+                        if (nameError) nameError.classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        if (nameError) nameError.classList.add('hidden');
                     }
-                    else {
-                        nameError.classList.add('hidden');
-                        if (checkboxError) checkboxError.classList.add('hidden');
+
+                    // 2. Validate Agreement Toggle
+                    if (!agreementAccepted) {
+                        if (toggleError) toggleError.classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        if (toggleError) toggleError.classList.add('hidden');
+                    }
+
+                    // 3. Validate Signature (check if anything was drawn)
+                    if (signatureCanvas && !signatureDrawn) { // Only check if canvas exists
+                        if (signatureError) signatureError.classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        if (signatureError) signatureError.classList.add('hidden');
+                    }
+
+
+                    if (isValid) {
                         sessionStorage.setItem('jacobPremiereAcknowledged', 'true');
                         sessionStorage.setItem('jacobPremiereAcknowledgedName', fullNameInput.value.trim());
+                        // Optionally save signature: sessionStorage.setItem('jacobPremiereSignature', signatureCanvas.toDataURL());
                         accessModal.classList.add('hidden');
                         mainContent.classList.remove('hidden-content');
                         document.body.style.overflow = 'auto';
