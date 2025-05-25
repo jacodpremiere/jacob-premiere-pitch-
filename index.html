@@ -6,6 +6,19 @@
     <title>Jacob Premiere: The Global Home Cinema Revolution</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Opciones de visualización y contenido:
+        - Modal de acceso: Objetivo: Seguro e informativo. Método: Superposición a pantalla completa con texto NDA resumido, campo de nombre, CHECKBOX de aceptación y botón de envío. Interacción: Entrada obligatoria, almacenamiento local para persistencia. Justificación: Aplica el reconocimiento de confidencialidad antes del acceso al contenido.
+        - Sección principal (Hero): Objetivo: Compromiso inmediato. Método: Gran titular, subtítulo. Fondo: Negro puro con sutil flujo de luz azul vibrante generado por CSS (SIN imagen/texto externo). Texto: Blanco/Color de acento primario. Justificación: Captura la atención y el mensaje central.
+        - Introducción: Objetivo: Proporcionar contexto. Método: Párrafo conciso. Justificación: Establece el escenario.
+        - ¿Qué es Jacob Premiere?: Objetivo: Definir la plataforma. Método: Descripción de texto con puntos clave (iconos Unicode). Justificación: Explica la oferta principal de forma sencilla.
+        - Doblaje multilingüe en tiempo real: Objetivo: Detallar la tecnología principal. Método: Título, párrafo introductorio, características clave (iconos Unicode), impacto estratégico. Justificación: Destaca la innovación.
+        - Feel The Hero: Objetivo: Resaltar característica única. Método: Eslogan, texto descriptivo. SIN marcador de posición visual conceptual. Justificación: Enfatiza el compromiso emocional.
+        - Modelo de membresía: Objetivo: Explicar precios. Método: Puntos concisos. Justificación: Visión general clara de los niveles de acceso.
+        - Oportunidad de mercado: Objetivo: Mostrar potencial de mercado. Método: Estadísticas clave (estilo HTML/CSS). Colores del gráfico de asistencia al cine actualizados a azul vibrante. Justificación: Cuantifica el tamaño del mercado y visualiza la asistencia.
+        - Comparación: Objetivo: Diferenciarse de la competencia. Método: Tabla simplificada. Justificación: Destaca las ventajas competitivas.
+        - Hoja de ruta: Objetivo: Mostrar planes futuros. Método: Puntos concisos. Justificación: Describe la progresión estratégica.
+        - Llamada a la acción final: Objetivo: Impulsar la acción. Método: Enlace de correo electrónico prominente. Interacción: Clicable. Justificación: Punto de conversión principal.
+        - CONFIRMACIÓN: NO se utilizan gráficos SVG. NO se utiliza Mermaid JS. -->
     <style>
         /* Variables CSS para el tema dinámico (Inspirado en Moku: Negro, Blanco, Azul vibrante) */
         :root {
@@ -165,7 +178,12 @@
             <label for="full-name" class="block text-left text-sm font-semibold mb-2 mt-6">Your Full Name (required for access acknowledgment):</label>
             <input type="text" id="full-name" class="modal-input" placeholder="Type your full name here">
             <p id="name-error" class="text-red-400 text-sm mb-2 hidden">Please enter your full name to proceed.</p>
-            <button id="agree-button" class="modal-button">Acknowledge & Access Platform</button>
+            <div class="mt-4">
+                <input type="checkbox" id="agreement-checkbox" class="mr-2">
+                <label for="agreement-checkbox" class="text-secondary text-sm">I confirm that I have read and accept the terms of the Non-Disclosure Agreement above.</label>
+                <p id="checkbox-error" class="text-red-400 text-sm mt-2 hidden">You must accept the terms to proceed.</p>
+            </div>
+            <button id="agree-button" class="modal-button mt-6">Acknowledge & Access Platform</button>
         </div>
     </div>
 
@@ -270,7 +288,7 @@
                         </ul>
                     </div>
                     <div>
-                        <h3 class="3xl font-bold primary-accent-primary mb-6">Additional Premieres: $15 each</h3>
+                        <h3 class="text-3xl font-bold primary-accent-primary mb-6">Additional Premieres: $15 each</h3>
                         <p>For members who wish to watch more than 2 premieres in the same month.</p>
                     </div>
                 </div>
@@ -413,7 +431,7 @@
                     const ctx1 = cinemaAttendanceCanvas.getContext('2d');
                     // Asegúrate de que la altura del gradiente sea igual o mayor que la altura máxima de la barra
                     // Puedes obtener la altura del canvas si es necesario o usar un valor fijo grande
-                    const gradientHeight = cinemaAttendanceCanvas.offsetHeight; // Usar offsetHeight para la altura visible
+                    const gradientHeight = cinemaAttendanceCanvas.offsetHeight; 
                     const gradient1 = ctx1.createLinearGradient(0, 0, 0, gradientHeight); 
                     gradient1.addColorStop(0, getComputedStyle(document.body).getPropertyValue('--text-primary')); // Blanco en la parte superior
                     gradient1.addColorStop(1, getComputedStyle(document.body).getPropertyValue('--text-accent-primary')); // Azul vibrante en la base
@@ -481,10 +499,17 @@
 
             if (agreeButton) {
                 agreeButton.addEventListener('click', () => {
+                    const checkboxError = document.getElementById('checkbox-error');
                     if (fullNameInput.value.trim() === '') {
                         nameError.classList.remove('hidden');
-                    } else {
+                        if (checkboxError) checkboxError.classList.add('hidden'); // Hide if other error is shown
+                    } else if (!document.getElementById('agreement-checkbox').checked) {
                         nameError.classList.add('hidden');
+                        if (checkboxError) checkboxError.classList.remove('hidden');
+                    }
+                    else {
+                        nameError.classList.add('hidden');
+                        if (checkboxError) checkboxError.classList.add('hidden');
                         sessionStorage.setItem('jacobPremiereAcknowledged', 'true');
                         sessionStorage.setItem('jacobPremiereAcknowledgedName', fullNameInput.value.trim());
                         accessModal.classList.add('hidden');
